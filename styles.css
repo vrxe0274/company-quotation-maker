@@ -877,6 +877,29 @@ input:focus-visible {
 .admin-tab-panel { display: none; }
 .admin-tab-panel.is-active { display: block; }
 
+/* ── PDF export rendering fix (pdfFix.js) ───────────────────────
+   Applied briefly while html2canvas captures the pages.
+   Removes transform distortion and overflow clipping so the
+   full 794 × 1123 px page is captured at scale 1.             */
+body.vrxe-pdf-rendering #previewScroll,
+body.vrxe-pdf-rendering .preview-scroll {
+  overflow: visible !important;
+  height:   auto    !important;
+  max-height: none  !important;
+}
+body.vrxe-pdf-rendering .preview-panel {
+  overflow: visible !important;
+  height:   auto    !important;
+}
+body.vrxe-pdf-rendering #previewCanvas {
+  width:      794px  !important;
+  min-height: 2310px !important;
+}
+body.vrxe-pdf-rendering #quotationPreview {
+  transform:        none       !important;
+  transform-origin: top left;
+}
+
 /* ══════════════════════════════════════════════════════════════
    PDF DOCUMENT TEMPLATE STYLES  (preserved — do not restyle)
    ══════════════════════════════════════════════════════════════ */

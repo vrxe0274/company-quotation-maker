@@ -6,7 +6,7 @@
    - Navigation requests fall back to the cached index.html
    ============================================================ */
 
-const VERSION    = "vrxe-v2";
+const VERSION    = "vrxe-v3";
 const SHELL_CACHE = `${VERSION}-shell`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 
@@ -30,6 +30,7 @@ const SHELL = [
   "js/items.js",
   "js/previewRenderer.js",
   "js/pdf.js",
+  "js/pdfFix.js",
   "js/defaultData.js",
   "js/adminModal.js",
   "js/mobileTabUI.js",
