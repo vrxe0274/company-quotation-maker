@@ -1,0 +1,18 @@
+<!-- Item cards are built dynamically in js/items.js based on row type.
+     This template is kept for legacy compatibility but is no longer
+     used directly — see App.addItem() in js/items.js. -->
+<template id="itemTemplate">
+  <div class="item-card" data-type="inclusion">
+    <div class="item-type-badge">Inclusion</div>
+    <button class="remove-item-btn" type="button" aria-label="Remove service row" title="Remove">🗑</button>
+    <div class="grid item-grid">
+      <label>Service<input class="item-service" type="text" /></label>
+      <label>Description<input class="item-description" type="text" /></label>
+      <label style="grid-column:1/-1">Details / Bullets<textarea class="item-details" rows="3" placeholder="One detail per line"></textarea></label>
+    </div>
+    <!-- hidden pricing fields kept so getItems() always finds them -->
+    <input class="item-original" type="hidden" value="" />
+    <input class="item-final"    type="hidden" value="" />
+    <input class="item-included" type="hidden" value="1" />
+  </div>
+</template>

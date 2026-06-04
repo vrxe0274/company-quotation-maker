@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>VRXE Quotation Maker</title>
+
+  <meta name="description" content="Create polished VRXE business quotations and export them to PDF." />
+  <meta name="theme-color" content="#ffffff" />
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="responsive.css" />
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" href="assets/vrxe-logo.png" />
+  <link rel="apple-touch-icon" href="assets/icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="VRXE Quote" />
+</head>
+<body>
+  <div data-include="partials/header.html"></div>
+
+  <main class="app-layout">
+    <!-- Sidebar: independent, not grouped with form content -->
+    <div data-include="partials/tabs.html"></div>
+
+    <!-- Form content: form-panel class kept for mobileTabUI.js compatibility -->
+    <div class="form-content form-panel">
+      <div data-include="partials/form-panels.html"></div>
+      <div data-include="partials/form-footer.html"></div>
+    </div>
+
+    <!-- Preview panel: independent -->
+    <div data-include="partials/preview.html"></div>
+  </main>
+
+  <div data-include="partials/item-template.html"></div>
+  <div data-include="partials/admin-modal.html"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/previewControls.js"></script>
+  <script src="js/tabs.js"></script>
+  <script src="js/items.js"></script>
+  <script src="js/previewRenderer.js"></script>
+  <script src="js/pdf.js"></script>
+  <script src="js/defaultData.js"></script>
+  <script src="js/adminModal.js"></script>
+  <script src="js/mobileTabUI.js"></script>
+  <script src="js/init.js"></script>
+  <script src="js/navMenu.js"></script>
+  <script src="js/htmlIncludes.js"></script>
+
+  <!-- Service worker registration (PWA / offline app shell) -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("service-worker.js").catch((err) => {
+          console.warn("Service worker registration failed:", err);
+        });
+      });
+    }
+  </script>
+</body>
+</html>

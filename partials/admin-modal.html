@@ -1,0 +1,91 @@
+<div id="adminModal" class="modal-backdrop" aria-hidden="true">
+  <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="adminModalTitle">
+    <button id="closeAdminModalBtn" class="modal-close-btn" type="button" aria-label="Close admin editor">×</button>
+
+    <!-- Password gate -->
+    <div id="adminPasswordView" class="admin-modal-view">
+      <span class="modal-lock-badge" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+        </svg>
+      </span>
+      <p class="section-kicker">Admin Locked</p>
+      <h2 id="adminPasswordTitle">Unlock Terms &amp; Conditions Editor</h2>
+      <p class="section-helper">Enter the admin password to edit payment details and policy text.</p>
+
+      <label>Password
+        <input id="adminPasswordInput" type="password" placeholder="Enter password" autocomplete="current-password" />
+      </label>
+      <p id="adminPasswordError" class="modal-error" aria-live="polite"></p>
+
+      <div class="modal-actions">
+        <button id="cancelAdminModalBtn" class="ghost-btn" type="button">Cancel</button>
+        <button id="unlockAdminBtn" class="primary-btn" type="button">Unlock</button>
+      </div>
+    </div>
+
+    <!-- Editor -->
+    <div id="adminEditorView" class="admin-modal-view" hidden>
+      <p class="section-kicker">Admin Editable</p>
+      <h2 id="adminModalTitle">Terms &amp; Conditions Settings</h2>
+      <p class="section-helper">These fields are pre-filled by default, but the admin can update them whenever needed.</p>
+
+      <div class="modal-tabs" role="tablist" aria-label="Admin editable settings">
+        <button id="adminPaymentTabBtn" class="modal-tab-btn is-active" type="button" data-admin-tab="payment">Payment</button>
+        <button id="adminTermsTabBtn" class="modal-tab-btn" type="button" data-admin-tab="terms">Terms</button>
+      </div>
+
+      <!-- Payment panel -->
+      <div id="adminPaymentPanel" class="admin-tab-panel is-active">
+        <div class="grid two">
+          <label>VAT Note<input id="vatNote" type="text" /></label>
+          <label>Payment Account Type<input id="paymentBank" type="text" /></label>
+        </div>
+        <div class="grid two">
+          <label>Account Number<input id="paymentAccount" type="text" /></label>
+          <label>Extension Rate Per Hour<input id="extensionRate" type="number" min="0" step="0.01" /></label>
+        </div>
+
+        <label>Payment Terms Template
+          <textarea id="paymentTerms" rows="4"></textarea>
+        </label>
+
+        <div class="payment-tokens-box">
+          <p class="tokens-label">Fill in the <code>{}</code> placeholders for the Payment Terms above:</p>
+          <div class="grid two">
+            <label class="token-field-label">
+              <span class="token-tag">{VALUE}</span>
+              Percentage (e.g. 50)
+              <input id="paymentTermsValue" type="text" placeholder="e.g. 50" />
+            </label>
+            <label class="token-field-label">
+              <span class="token-tag">{NUMBER OF DAYS/MONTHS}</span>
+              Days / Months Notice
+              <input id="paymentTermsDays" type="text" placeholder="e.g. two (2) months" />
+            </label>
+          </div>
+          <label class="token-field-label">
+            <span class="token-tag">{COST}</span>
+            Amount in Words / Value (leave blank to auto-fill from total)
+            <input id="paymentTermsCost" type="text" placeholder="Auto-filled from total if blank" />
+          </label>
+        </div>
+      </div>
+
+      <!-- Terms panel -->
+      <div id="adminTermsPanel" class="admin-tab-panel">
+        <label>Labor &amp; Inclusions<textarea id="laborTerms" rows="3"></textarea></label>
+        <label>Cancellation Policy<textarea id="cancellationPolicy" rows="3"></textarea></label>
+        <label>Damage Liability<textarea id="damageLiability" rows="3"></textarea></label>
+        <label>Booking Requirements<textarea id="bookingRequirements" rows="3"></textarea></label>
+      </div>
+
+      <div class="modal-actions">
+        <button class="ghost-btn close-admin-editor" type="button">Close</button>
+        <button class="primary-btn close-admin-editor" type="button">Done</button>
+      </div>
+    </div>
+  </div>
+</div>

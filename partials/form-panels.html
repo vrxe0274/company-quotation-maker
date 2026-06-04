@@ -1,0 +1,86 @@
+<div class="tab-panels">
+
+  <!-- Step 1 — Quotation Information -->
+  <section class="tab-panel is-active" id="tab-quote">
+    <div class="section-title">
+      <div class="section-heading">
+        <p class="section-kicker">Step 1</p>
+        <h2>Quotation Information</h2>
+      </div>
+      <button id="newQuoteBtn" class="ghost-btn" type="button">New Reference No.</button>
+    </div>
+
+    <div class="grid two">
+      <label>Reference No.<input id="quoteCode" type="text" /></label>
+      <label>Quotation Date<input id="quoteDate" type="date" /></label>
+    </div>
+    <div class="grid two">
+      <label>Service Availed<input id="serviceAvailed" type="text" placeholder="e.g. VR Booth Experience" /></label>
+      <label>Service Period<input id="servicePeriod" type="text" placeholder="e.g. 1 Day Event" /></label>
+    </div>
+    <label>Prepared By<input id="preparedBy" type="text" placeholder="Staff name" /></label>
+  </section>
+
+  <!-- Step 2 — Client Information -->
+  <section class="tab-panel" id="tab-client">
+    <div class="section-title">
+      <div class="section-heading">
+        <p class="section-kicker">Step 2</p>
+        <h2>Client Information</h2>
+      </div>
+    </div>
+
+    <div class="grid two">
+      <label>Client Name<input id="clientName" type="text" placeholder="Full name" /></label>
+      <label>Company<input id="clientCompany" type="text" placeholder="Company / organization" /></label>
+    </div>
+    <div class="grid two">
+      <label>Contact No.<input id="clientContact" type="text" placeholder="Mobile / landline" /></label>
+      <label>Address Line<input id="clientAddress" type="text" placeholder="Street, city" /></label>
+    </div>
+  </section>
+
+  <!-- Step 3 — Event / Service Details -->
+  <section class="tab-panel" id="tab-event">
+    <div class="section-title">
+      <div class="section-heading">
+        <p class="section-kicker">Step 3</p>
+        <h2>Event / Service Details</h2>
+      </div>
+    </div>
+
+    <div class="grid two">
+      <label>Date<input id="eventDate" type="date" /></label>
+      <label>Time<input id="eventTime" type="text" placeholder="e.g. 9:00 AM – 5:00 PM" /></label>
+    </div>
+    <div class="grid two">
+      <label>Venue<input id="eventVenue" type="text" placeholder="Event location" /></label>
+      <label>Event<input id="eventName" type="text" placeholder="Event name" /></label>
+    </div>
+    <label>Service<input id="eventService" type="text" placeholder="Service description" /></label>
+  </section>
+
+  <!-- Step 4 — Services & Pricing -->
+  <section class="tab-panel" id="tab-services">
+    <div class="section-title items-heading">
+      <div class="section-heading">
+        <p class="section-kicker">Step 4</p>
+        <h2>Services &amp; Pricing</h2>
+      </div>
+      <div class="add-row-btns">
+        <button id="addInclusionBtn" class="ghost-btn add-inclusion-btn" type="button">+ Inclusion</button>
+        <button id="addAdditionalBtn" class="ghost-btn add-additional-btn" type="button">+ Additional</button>
+      </div>
+    </div>
+
+    <div class="verification-card">
+      <label class="verify-label">
+        <input id="servicesVerified" type="checkbox" />
+        <span>I have reviewed and verified that the services, inclusions, and pricing are correct for this quotation.</span>
+      </label>
+    </div>
+
+    <div id="itemsList" class="items-list"></div>
+  </section>
+
+</div>

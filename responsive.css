@@ -1,0 +1,387 @@
+/* ============================================================
+   VRXE Quotation Maker — Responsive CSS
+   Outer layout uses FLEXBOX (not grid) — no column-placement
+   ambiguity. Three independent flex children in .app-layout:
+     .tabs (sidebar) | .form-content.form-panel | .preview-panel
+
+   ≤ 1200px  Compact desktop — tighten gaps, shrink sidebar
+   ≤ 900px   Tablet — sidebar becomes horizontal top strip;
+             form + preview stack vertically
+   ≤ 767px   Mobile — sidebar hidden → dropdown (navMenu.js);
+             Forms/Preview toggled by mobileTabUI.js
+   ≤ 480px   Small mobile
+   ============================================================ */
+
+/* ══════════════════════════════════════════════════════════════
+   1. COMPACT DESKTOP ≤ 1200px
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 1200px) {
+  .app-layout {
+    gap: 16px;
+    padding: 16px 18px;
+  }
+  .tabs { flex: 0 0 194px; width: 194px; }
+  .tab-panels  { padding: 24px 22px 18px; }
+  .tab-footer  { padding: 14px 22px 18px; }
+  .preview-panel { padding: 16px; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   2. TABLET ≤ 900px
+   Sidebar collapses to a full-width horizontal scroll strip;
+   form and preview stack below it.
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  html { overflow: auto; height: auto; }
+  body { overflow-x: hidden; }
+
+  .app-layout {
+    flex-direction: column;
+    gap: 14px;
+    padding: 14px 14px 28px;
+  }
+
+  /* Sidebar → horizontal scrolling tab strip */
+  .tabs {
+    flex: 0 0 auto;
+    width: 100%;
+    position: static;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: visible;
+    gap: 6px;
+    padding: 10px 12px;
+    height: auto;
+    border-radius: var(--r-xl);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs::before { display: none; }
+
+  .sidebar-brand,
+  .tab-group-label,
+  .tab-divider { display: none; }
+
+  .tab-btn {
+    flex: 0 0 auto;
+    padding: 9px 15px;
+    gap: 8px;
+    white-space: nowrap;
+  }
+  .tab-number { width: 22px; height: 22px; flex-basis: 22px; font-size: 10.5px; }
+  #openAdminSettingsBtn.admin-tab { padding: 9px 15px; }
+  #openAdminSettingsBtn.admin-tab .tab-text { flex-direction: row; gap: 5px; align-items: center; }
+  #openAdminSettingsBtn.admin-tab .tab-text small { display: none; }
+
+  /* Form: full width below the strip */
+  .form-content {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+  .tab-panels { padding: 22px 18px 14px; }
+  .tab-footer { padding: 12px 18px 16px; }
+
+  /* Preview: full width, static, fixed height */
+  .preview-panel {
+    flex: 0 0 auto;
+    width: 100%;
+    position: static;
+    height: auto;
+    min-height: 560px;
+    padding: 16px;
+  }
+  .preview-scroll { height: 560px; }
+
+  #tab-services.is-active { max-height: none; }
+  #tab-services.is-active #itemsList { max-height: 360px; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3. MOBILE ≤ 767px
+   Sidebar completely hidden → navMenu.js injects dropdown.
+   mobileTabUI.js toggles .form-panel / .preview-panel via
+   inline display — NEVER use display:…!important on those.
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+
+  html { overflow: hidden; height: 100%; }
+  body { height: 100%; overflow: hidden; }
+
+  /* Header */
+  .app-header { padding: 0 14px; height: 56px; gap: 10px; }
+  .brand-logo-frame { width: 36px; height: 36px; border-radius: 11px; }
+  .eyebrow { font-size: 8.5px; }
+  h1 { font-size: 15px; }
+  #downloadPdfBtn { display: none; }
+
+  /* Injected Forms | Preview toggle bar */
+  .mobile-primary-tab-bar {
+    display: flex;
+    position: sticky;
+    top: 56px;
+    z-index: 90;
+    background: rgba(255,255,255,.97);
+    border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 9px 14px;
+    gap: 8px;
+    box-shadow: 0 2px 10px rgba(20,18,35,.06);
+  }
+  .mptb-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 10px 12px;
+    border: 1.5px solid var(--line);
+    border-radius: var(--r-md);
+    background: var(--soft);
+    color: var(--text-2);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .14s, border-color .14s, color .14s, box-shadow .14s;
+  }
+  .mptb-btn.is-active {
+    background: var(--text);
+    color: #fff;
+    border-color: var(--text);
+    box-shadow: 0 4px 14px rgba(20,18,35,.22);
+  }
+  .mptb-btn svg { flex-shrink: 0; }
+
+  /* ── Main layout ── */
+  .app-layout {
+    display: block;
+    flex-direction: unset;
+    padding: 0;
+    gap: 0;
+    height: calc(100vh - 56px - 61px);
+    height: calc(100dvh - 56px - 61px);
+    overflow: hidden;
+  }
+
+  /* Sidebar: hidden — replaced by nav dropdown */
+  .tabs { display: none !important; }
+
+  /* Form content: full-width flex column.
+     NO !important on display — mobileTabUI inline toggle must work. */
+  .form-content {
+    flex: unset;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+    min-width: 0;
+  }
+
+  /* ── Nav dropdown (injected by navMenu.js) ── */
+  .nav-dropdown {
+    display: block;
+    position: relative;
+    flex: 0 0 auto;
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+    padding: 10px 12px;
+    z-index: 80;
+  }
+  .nav-dd-trigger {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--line-strong);
+    border-radius: var(--r-md);
+    background: var(--soft);
+    color: var(--text);
+    font: inherit;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color .14s, background .14s, box-shadow .14s;
+  }
+  .nav-dropdown.is-open .nav-dd-trigger {
+    border-color: var(--brand);
+    background: #fff;
+    box-shadow: 0 0 0 3px var(--brand-ring);
+  }
+  .nav-dd-badge {
+    flex: 0 0 28px; width: 28px; height: 28px;
+    display: inline-grid; place-items: center;
+    border-radius: 50%;
+    background: var(--text); color: #fff;
+    font-size: 12.5px; font-weight: 800; font-family: var(--font-mono);
+  }
+  .nav-dd-titles { display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1; }
+  .nav-dd-kicker { font-size: 9.5px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .nav-dd-label { font-size: 14.5px; font-weight: 800; letter-spacing: -.01em; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .nav-dd-caret { flex: 0 0 auto; color: var(--muted); transition: transform .18s var(--ease); }
+  .nav-dropdown.is-open .nav-dd-caret { transform: rotate(180deg); }
+  .nav-dd-menu {
+    position: absolute; top: calc(100% - 4px); left: 12px; right: 12px; z-index: 95;
+    background: #fff; border: 1px solid var(--line); border-radius: var(--r-md);
+    box-shadow: var(--shadow-lg); padding: 6px;
+    opacity: 0; transform: translateY(-6px); pointer-events: none;
+    transition: opacity .16s var(--ease), transform .16s var(--ease);
+  }
+  .nav-dropdown.is-open .nav-dd-menu { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .nav-dd-item {
+    display: flex; align-items: center; gap: 11px;
+    width: 100%; padding: 11px 12px;
+    border: 0; border-radius: var(--r-sm);
+    background: transparent; color: var(--text-2);
+    font: inherit; font-size: 14px; font-weight: 600;
+    cursor: pointer; text-align: left; transition: background .12s;
+  }
+  .nav-dd-item:hover, .nav-dd-item:active { background: var(--soft); }
+  .nav-dd-item.is-active { background: var(--brand-soft); color: var(--text); }
+  .nav-dd-item-num {
+    flex: 0 0 24px; width: 24px; height: 24px;
+    display: inline-grid; place-items: center; border-radius: 50%;
+    border: 1.5px solid var(--line-strong);
+    background: #fff; color: var(--text-2); font-size: 11px; font-weight: 800;
+  }
+  .nav-dd-item.is-active .nav-dd-item-num { background: var(--text); border-color: var(--text); color: #fff; }
+  .nav-dd-item-num-admin { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+  .nav-dd-item-text { flex: 1; min-width: 0; }
+  .nav-dd-check { flex: 0 0 auto; color: var(--brand); opacity: 0; transition: opacity .12s; }
+  .nav-dd-item.is-active .nav-dd-check { opacity: 1; }
+  .nav-dd-sep { height: 1px; margin: 6px 8px; background: var(--line); }
+
+  /* ── Tab panels ── */
+  .tab-panels {
+    flex: 1; min-height: 0; overflow-y: auto;
+    border: 0; border-radius: 0; padding: 0;
+    box-shadow: none; background: var(--bg);
+    scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent;
+  }
+  .tab-panels::before { display: none; }
+  .tab-panels::-webkit-scrollbar { width: 4px; }
+  .tab-panels::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 99px; }
+
+  .tab-panel {
+    background: #fff; border: 0; border-radius: 0;
+    padding: 20px 16px 16px; box-shadow: none; min-height: 100%;
+  }
+
+  #tab-services.is-active { max-height: none; display: flex; flex-direction: column; min-height: 100%; }
+  #tab-services.is-active #itemsList { flex: 1 1 auto; overflow-y: auto; max-height: none; }
+
+  .section-title { margin-bottom: 16px; }
+  h2 { font-size: 20px; }
+  .section-kicker { font-size: 10px; }
+  .grid.two { grid-template-columns: 1fr; }
+
+  /* ── Footer ── */
+  .tab-footer {
+    flex: 0 0 auto; width: 100%;
+    border-radius: 0; border: 0; border-top: 1px solid var(--line);
+    padding: 12px 16px 14px; background: #fff;
+    box-shadow: 0 -2px 12px rgba(20,18,35,.06);
+    display: flex; justify-content: space-between; gap: 10px;
+  }
+  .tab-footer .primary-btn, .tab-footer .ghost-btn { flex: 1; padding: 12px 16px; font-size: 13.5px; }
+
+  /* ── Preview panel: NO !important on display ── */
+  .preview-panel {
+    flex: unset;
+    position: static;
+    width: 100%; max-width: 100%; min-width: 0;
+    height: calc(100vh - 56px - 61px);
+    height: calc(100dvh - 56px - 61px);
+    border-radius: 0; border: 0; box-shadow: none;
+    padding: 12px 12px 0; overflow: hidden;
+    display: flex; flex-direction: column; background: var(--bg);
+  }
+  .preview-panel .section-title { margin-bottom: 10px; }
+  .preview-panel h2 { font-size: 17px; }
+  .preview-scroll { flex: 1; margin-top: 8px; }
+
+  /* Mobile download button */
+  .mobile-preview-download-btn {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; width: 100%; margin-bottom: 10px;
+    padding: 13px 20px; font-size: 14px; border-radius: var(--r-md);
+    background: var(--text); color: #fff; border: none;
+    cursor: pointer; font: inherit; font-weight: 700;
+    box-shadow: 0 6px 18px rgba(20,18,35,.22);
+    transition: transform .12s, box-shadow .12s; flex-shrink: 0;
+  }
+  .mobile-preview-download-btn:active { transform: scale(.98); box-shadow: 0 2px 8px rgba(20,18,35,.16); }
+
+  /* Item cards */
+  .item-card { padding: 16px 16px 14px; }
+  .item-grid { grid-template-columns: 1fr !important; padding-right: 46px !important; }
+  .remove-item-btn { top: 12px; right: 12px; width: 32px; height: 32px; font-size: 13px; }
+  .verification-card { margin-bottom: 12px; }
+  .add-row-btns { gap: 6px; flex-wrap: wrap; }
+  .add-row-btns .ghost-btn { font-size: 12.5px; padding: 8px 12px; }
+
+  /* Admin modal */
+  .admin-modal { padding: 24px 18px; max-height: 92vh; }
+  .modal-tabs { overflow-x: auto; scrollbar-width: none; }
+  .admin-modal .grid.two { grid-template-columns: 1fr; }
+  .payment-tokens-box .grid.two { grid-template-columns: 1fr; }
+
+  /* Zoom controls */
+  .zoom-btn { min-width: 28px; height: 28px; font-size: 14px; }
+  .zoom-level { font-size: 11px; min-width: 38px; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   4. SMALL MOBILE ≤ 480px
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .app-header { padding: 0 12px; height: 52px; }
+  .brand-logo-frame { width: 32px; height: 32px; }
+  h1 { font-size: 14px; }
+  .eyebrow { display: none; }
+  .mobile-primary-tab-bar { top: 52px; padding: 8px 12px; gap: 7px; }
+  .mptb-btn { font-size: 12.5px; padding: 9px 10px; gap: 6px; }
+  .app-layout    { height: calc(100vh - 52px - 60px); height: calc(100dvh - 52px - 60px); }
+  .preview-panel { height: calc(100vh - 52px - 60px); height: calc(100dvh - 52px - 60px); padding: 10px 10px 0; }
+  .tab-panel { padding: 18px 14px 14px; }
+  .tab-footer { padding: 10px 12px 12px; }
+  h2 { font-size: 18px; }
+  label { font-size: 12px; margin-bottom: 12px; }
+  input, textarea { font-size: 16px; padding: 11px 12px; }
+  .nav-dropdown { padding: 9px 12px; }
+  .nav-dd-trigger { padding: 10px 12px; gap: 10px; }
+  .nav-dd-label { font-size: 14px; }
+  .nav-dd-badge { flex-basis: 26px; width: 26px; height: 26px; }
+  .add-row-btns .ghost-btn { font-size: 12px; padding: 7px 10px; }
+  .admin-modal { padding: 20px 14px; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   5. TALL MOBILE
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) and (min-height: 812px) {
+  #tab-services.is-active #itemsList { max-height: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   6. LANDSCAPE MOBILE
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) and (orientation: landscape) {
+  .app-header { height: 46px; }
+  .brand-logo-frame { width: 28px; height: 28px; }
+  h1 { font-size: 13px; }
+  .eyebrow { display: none; }
+  .mobile-primary-tab-bar { top: 46px; padding: 6px 12px; gap: 8px; }
+  .mptb-btn { font-size: 12px; padding: 7px 12px; }
+  .app-layout    { height: calc(100vh - 46px - 52px); height: calc(100dvh - 46px - 52px); }
+  .preview-panel { height: calc(100vh - 46px - 52px); height: calc(100dvh - 46px - 52px); }
+  .tab-panel { padding: 14px 16px 12px; }
+  .tab-footer { padding: 8px 16px 10px; }
+  h2 { font-size: 17px; }
+  .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "VRXE Quotation Maker",
+  "short_name": "VRXE Quote",
+  "description": "Create polished VRXE business quotations and export them to PDF.",
+  "lang": "en",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "/vrxe-quotation-maker/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "categories": ["business", "productivity"],
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
