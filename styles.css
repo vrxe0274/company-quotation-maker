@@ -398,13 +398,6 @@ h1 {
   box-shadow: var(--shadow-md);
   overflow: hidden;
 }
-.tab-panels::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: var(--brand-grad);
-}
 
 .tab-panel {
   display: none;
