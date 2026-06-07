@@ -1,0 +1,241 @@
+/* ============================================================
+   VRXE Quotation Maker — PDF Document Template Styles
+   Covers .quotation-page and all child elements rendered
+   inside the generated quotation document.
+
+   IMPORTANT: These rules are preserved byte-for-byte so the
+   exported PDF renders identically. Do not restyle.
+   ============================================================ */
+
+.quotation-page {
+  width: 794px;
+  height: 1123px;
+  margin: 0 0 24px;
+  background: #fff;
+  color: #1A1A1A;
+  border: 1px solid #DDD;
+  padding: 48px 60px 38px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  line-height: 1.35;
+  position: relative;
+}
+
+.quotation-page p { margin: 0; }
+
+.document-logo {
+  width: 68px;
+  height: auto;
+  object-fit: contain;
+  margin-left: 12px;
+  margin-bottom: 10px;
+}
+
+.doc-head {
+  display: grid;
+  grid-template-columns: 1.65fr 1fr;
+  border-top: 2px solid #111;
+  border-bottom: 2px solid #111;
+}
+
+.client-box {
+  background: #1A1A1A;
+  color: #fff;
+  padding: 14px 18px;
+  min-height: 68px;
+}
+
+.client-box .to { font-weight: 800; margin-right: 8px; }
+
+.client-lines { display: inline-block; vertical-align: top; }
+
+.ref-box {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  border-left: 2px solid #111;
+}
+
+.ref-label, .ref-value {
+  padding: 11px 13px;
+  border-bottom: 1px solid #CCC;
+}
+
+.ref-label { font-weight: 800; text-transform: uppercase; font-size: 10px; letter-spacing: .04em; }
+.ref-value  { text-align: right; font-family: 'Courier New', monospace; font-size: 11px; }
+.ref-label:nth-last-child(2),
+.ref-value:last-child { border-bottom: 0; }
+
+.service-strip {
+  display: grid;
+  grid-template-columns: 145px 1fr;
+  border-bottom: 2px solid #111;
+  padding: 8px 0;
+}
+
+.service-strip strong { text-transform: uppercase; font-size: 10.5px; letter-spacing: .04em; }
+.service-strip .service-value { font-weight: 800; font-size: 11.5px; }
+
+.quote-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+.quote-table th {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  font-weight: 800;
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1.5px solid #999;
+  color: #444;
+}
+
+.quote-table th.amount-head { text-align: right; }
+.quote-table td {
+  vertical-align: top;
+  padding: 9px 10px;
+  border-bottom: 1px solid #E0E0E0;
+}
+
+.service-name { font-weight: 800; font-size: 12.5px; }
+
+.details-list { margin: 0; padding-left: 15px; }
+.details-list li { margin: 0 0 2px; font-size: 10.5px; }
+
+.amount-cell { text-align: right; white-space: nowrap; }
+
+.old-price {
+  color: #C0392B;
+  text-decoration: line-through;
+  font-weight: 600;
+  display: block;
+  font-size: 10.5px;
+}
+
+.final-price { font-weight: 800; display: block; font-size: 12px; }
+
+.discount-note {
+  color: #777;
+  font-style: italic;
+  font-size: 10px;
+}
+
+.total-box {
+  margin: 16px 0 0 auto;
+  width: 290px;
+  background: #1A1A1A;
+  color: #fff;
+  padding: 12px 16px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px 12px;
+  font-weight: 800;
+  font-size: 12px;
+}
+
+.total-box .words {
+  grid-column: 1 / -1;
+  font-size: 9px;
+  font-weight: 500;
+  opacity: .75;
+  margin-top: 2px;
+}
+
+/* In preview, render inclusion rows with a subtle left border */
+.item-row-inclusion td:first-child {
+  border-left: 3px solid #16A34A;
+  padding-left: 8px;
+}
+
+.cont-note {
+  position: absolute;
+  right: 62px;
+  bottom: 50px;
+  font-style: italic;
+  color: #888;
+  font-size: 10px;
+}
+
+.page-no {
+  position: absolute;
+  right: 62px;
+  bottom: 32px;
+  font-size: 9.5px;
+  color: #999;
+  letter-spacing: .04em;
+}
+
+.terms-title {
+  text-align: center;
+  font-weight: 900;
+  letter-spacing: .06em;
+  font-size: 12.5px;
+  text-transform: uppercase;
+  margin: 22px 0 16px;
+}
+
+.terms-grid {
+  display: grid;
+  grid-template-columns: 148px 1fr;
+  gap: 10px 14px;
+}
+
+.term-label {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  font-size: 9.5px;
+  padding-top: 2px;
+  color: #444;
+}
+
+.term-content { min-height: 20px; font-size: 11px; }
+
+.term-content .kv {
+  display: grid;
+  grid-template-columns: 128px 1fr;
+  margin-bottom: 2px;
+}
+
+.rule {
+  border: 0;
+  border-top: 1.5px solid #111;
+  margin: 16px 0 10px;
+}
+
+.conforme-text { margin-bottom: 32px !important; font-size: 11px; }
+
+.sign-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: end;
+}
+
+.sign-line {
+  border-top: 1px solid #111;
+  padding-top: 7px;
+  min-height: 54px;
+  font-size: 11px;
+}
+
+.sign-caption {
+  font-weight: 800;
+  font-size: 9.5px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 26px !important;
+  color: #555;
+}
+
+.small-footer {
+  position: absolute;
+  left: 60px;
+  right: 60px;
+  bottom: 18px;
+  font-size: 7.5px;
+  color: #AAA;
+  line-height: 1.4;
+}
