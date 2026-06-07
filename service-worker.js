@@ -6,7 +6,7 @@
    - Navigation requests fall back to the cached index.html
    ============================================================ */
 
-const VERSION    = "vrxe-v3";
+const VERSION    = "vrxe-v1";
 const SHELL_CACHE = `${VERSION}-shell`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 
@@ -14,6 +14,7 @@ const SHELL = [
   "./",
   "index.html",
   "styles.css",
+  "quotation.css",
   "responsive.css",
   "manifest.json",
   "partials/header.html",
