@@ -2,58 +2,60 @@
    VRXE Quotation Maker — UI Theme
    Design: clean white document studio, dark header,
    purple/pink gradient accents, minimal sidebar navigation.
-   Fonts: DM Sans (UI) + DM Mono (codes / numbers)
+   Fonts: Figtree (UI) + JetBrains Mono (codes / numbers)
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=DM+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 /* ── Design Tokens ─────────────────────────────────────────── */
 :root {
   /* Surfaces */
-  --bg:          #F0F0F5;
-  --card:        #FFFFFF;
+  --bg:          #F8F8FF;
+  --card:        #F8F8FF;
   --sidebar-bg:  #FFFFFF;
-  --input-bg:    #F8F8FC;
-  --soft:        #F2F2F8;
-  --item-bg:     #FCFCFE;
-  --header-bg:   #16151B;
+  --input-bg:    #FAFAFE;
+  --soft:        #F0EFF8;
+  --item-bg:     #FDFCFF;
+  --header-bg:   #FFFFFF;
 
   /* Text */
-  --text:        #16151B;
-  --text-2:      #403E4A;
-  --muted:       #8C8996;
-  --label:       #6B6878;
+  --text:        #14131A;
+  --text-2:      #3D3B4A;
+  --muted:       #8A8799;
+  --label:       #6A677A;
 
   /* Borders */
-  --line:        #E4E3EE;
-  --line-strong: #CCCBDA;
+  --line:        #E6E4F0;
+  --line-strong: #CAC8DA;
+  --input-border: #D8D6E8;
+  --input-border-focus: #8B5CF6;
 
   /* Brand spectrum (VRXE) — violet → fuchsia → pink */
   --brand:       #7C3AED;
   --brand-mid:   #C026D3;
   --brand-end:   #EC4899;
-  --brand-soft:  #F5F0FF;
-  --brand-ring:  rgba(124, 58, 237, .18);
-  --brand-grad:  linear-gradient(135deg, #7C3AED 0%, #C026D3 50%, #EC4899 100%);
+  --brand-soft:  #F4F0FF;
+  --brand-ring:  rgba(124, 58, 237, .15);
+  --brand-grad:  linear-gradient(135deg, #7C3AED 0%, #C026D3 55%, #EC4899 100%);
 
   /* Tab active gradient */
-  --tab-active-grad: linear-gradient(135deg, #8B3CF7 0%, #C026D3 50%, #EC4899 100%);
+  --tab-active-grad: linear-gradient(135deg, #8B3CF7 0%, #C026D3 55%, #EC4899 100%);
 
   /* Semantic */
   --green:       #16A34A;
   --green-bg:    #F0FDF4;
   --green-light: #DCFCE7;
   --amber:       #B45309;
-  --amber-bg:    #FFFBEB;
+  --amber-bg:    #FFFCF4;
   --red:         #DC2626;
   --red-bg:      #FEF2F2;
 
-  /* Shadows */
-  --shadow-xs:   0 1px 2px rgba(20, 18, 35, .04);
-  --shadow-sm:   0 2px 8px rgba(20, 18, 35, .07), 0 1px 2px rgba(20, 18, 35, .04);
-  --shadow-md:   0 4px 16px rgba(20, 18, 35, .08), 0 1px 4px rgba(20, 18, 35, .04);
-  --shadow-lg:   0 16px 40px rgba(20, 18, 35, .12), 0 4px 10px rgba(20, 18, 35, .06);
-  --shadow-xl:   0 28px 64px rgba(20, 18, 35, .18), 0 6px 16px rgba(20, 18, 35, .08);
+  /* Shadows — warmer tint, more natural depth */
+  --shadow-xs:   0 1px 2px rgba(18, 15, 38, .05);
+  --shadow-sm:   0 2px 8px rgba(18, 15, 38, .08), 0 1px 2px rgba(18, 15, 38, .04);
+  --shadow-md:   0 4px 18px rgba(18, 15, 38, .09), 0 1px 4px rgba(18, 15, 38, .05);
+  --shadow-lg:   0 16px 40px rgba(18, 15, 38, .13), 0 4px 10px rgba(18, 15, 38, .06);
+  --shadow-xl:   0 28px 64px rgba(18, 15, 38, .18), 0 6px 16px rgba(18, 15, 38, .09);
 
   /* Radius */
   --r-xs:   5px;
@@ -64,8 +66,8 @@
   --r-pill: 999px;
 
   /* Typography */
-  --font-ui:   'DM Sans', system-ui, -apple-system, sans-serif;
-  --font-mono: 'DM Mono', 'Courier New', monospace;
+  --font-ui:   'Figtree', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
 
   /* Motion */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
@@ -85,7 +87,7 @@ body {
   color: var(--text);
   font-family: var(--font-ui);
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
@@ -110,7 +112,7 @@ h3 { margin: 20px 0 10px; }
   padding: 0 24px;
   height: 62px;
   background: var(--header-bg);
-  border-bottom: 1px solid rgba(255,255,255,.06);
+  border-bottom: 1px solid rgba(124, 58, 237, .12);
 }
 
 .brand-wrap {
@@ -145,18 +147,18 @@ h3 { margin: 20px 0 10px; }
 
 .eyebrow {
   margin: 0;
-  color: rgba(255, 255, 255, 0.5);
+  color: #14131ab6;
   font-size: 9px;
-  letter-spacing: .18em;
+  letter-spacing: .2em;
   text-transform: uppercase;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 h1 {
   font-size: 17px;
   font-weight: 800;
-  letter-spacing: -.02em;
-  color: white;
+  letter-spacing: -.03em;
+  color: #14131A;
   margin: 0;
 }
 
@@ -194,8 +196,8 @@ h1 {
   margin: 14px 8px 6px;
   color: var(--muted);
   font-size: 9px;
-  font-weight: 800;
-  letter-spacing: .18em;
+  font-weight: 700;
+  letter-spacing: .2em;
   text-transform: uppercase;
 }
 
@@ -224,7 +226,7 @@ h1 {
   letter-spacing: -.01em;
 }
 
-.tab-text { letter-spacing: -.01em; line-height: 1.2; }
+.tab-text { letter-spacing: -.01em; line-height: 1.25; }
 
 .tab-number {
   width: 26px;
@@ -233,13 +235,14 @@ h1 {
   display: inline-grid;
   place-items: center;
   flex: 0 0 26px;
-  font-size: 12px;
-  font-weight: 800;
+  font-size: 11px;
+  font-weight: 700;
   background: var(--soft);
   color: var(--text-2);
   border: 1.5px solid var(--line);
   transition: background .15s, border-color .15s, color .15s;
   font-family: var(--font-mono);
+  letter-spacing: 0;
 }
 
 .tab-btn:hover:not(.is-active) {
@@ -250,7 +253,7 @@ h1 {
 .tab-btn.is-active {
   background: var(--tab-active-grad);
   color: #fff;
-  box-shadow: 0 4px 16px rgba(124, 58, 237, .30);
+  box-shadow: 0 4px 16px rgba(124, 58, 237, .28);
 }
 
 .tab-btn.is-active .tab-number {
@@ -302,7 +305,7 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 1px;
-  line-height: 1.15;
+  line-height: 1.2;
   white-space: normal;
   min-width: 0;
 }
@@ -316,8 +319,8 @@ h1 {
 #openAdminSettingsBtn.admin-tab .tab-text small {
   color: var(--muted);
   font-size: 9px;
-  font-weight: 700;
-  letter-spacing: .08em;
+  font-weight: 600;
+  letter-spacing: .1em;
   text-transform: uppercase;
 }
 
@@ -390,11 +393,11 @@ h1 {
 .section-kicker {
   display: inline-block;
   color: var(--muted);
-  margin-bottom: 4px;
+  margin-bottom: 5px;
   font-size: 10px;
-  letter-spacing: .16em;
+  letter-spacing: .18em;
   text-transform: uppercase;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 h2 {
@@ -402,6 +405,7 @@ h2 {
   font-weight: 800;
   letter-spacing: -.04em;
   color: var(--text);
+  line-height: 1.15;
 }
 
 /* ── Form Fields ────────────────────────────────────────────── */
@@ -410,40 +414,45 @@ h2 {
 
 label {
   display: grid;
-  gap: 7px;
+  gap: 6px;
   font-weight: 700;
-  font-size: 11px;
+  font-size: 11.5px;
   color: var(--label);
-  letter-spacing: .08em;
+  letter-spacing: .06em;
   text-transform: uppercase;
   margin-bottom: 14px;
+  line-height: 1.4;
 }
 
 input, textarea {
   width: 100%;
-  border: 1.5px solid var(--line);
+  border: 1.5px solid var(--input-border);
   border-radius: var(--r-sm);
   padding: 11px 13px;
   font: inherit;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   color: var(--text);
   background: var(--input-bg);
   outline: none;
   transition: border-color .14s, box-shadow .14s, background .14s;
-  letter-spacing: -.005em;
+  letter-spacing: -.01em;
+  line-height: 1.5;
 }
 
-input:hover, textarea:hover { border-color: var(--line-strong); }
+input:hover, textarea:hover {
+  border-color: var(--line-strong);
+  background: #fff;
+}
 
 input:focus, textarea:focus {
-  border-color: var(--brand);
+  border-color: var(--input-border-focus);
   background: #fff;
   box-shadow: 0 0 0 3px var(--brand-ring);
 }
 
 input::placeholder, textarea::placeholder {
-  color: #C4C2D0;
+  color: #B5B2C6;
   font-weight: 400;
   font-style: italic;
   letter-spacing: 0;
@@ -452,6 +461,7 @@ input::placeholder, textarea::placeholder {
 
 textarea { resize: vertical; }
 input[type="date"] { font-family: var(--font-ui); }
+input[type="number"] { font-family: var(--font-mono); font-size: 14px; }
 
 /* ── Buttons ────────────────────────────────────────────────── */
 .primary-btn,
@@ -478,14 +488,14 @@ input[type="date"] { font-family: var(--font-ui); }
   background: var(--brand-grad);
   color: #fff;
   border: none;
-  box-shadow: 0 4px 14px rgba(124, 58, 237, .35);
+  box-shadow: 0 4px 14px rgba(124, 58, 237, .32);
 }
 .primary-btn:hover {
   opacity: .92;
-  box-shadow: 0 6px 20px rgba(124, 58, 237, .45);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, .42);
   transform: translateY(-1px);
 }
-.primary-btn:active { transform: translateY(0); box-shadow: 0 2px 8px rgba(124,58,237,.3); }
+.primary-btn:active { transform: translateY(0); box-shadow: 0 2px 8px rgba(124,58,237,.28); }
 
 /* Ghost button */
 .ghost-btn {
@@ -573,7 +583,7 @@ input:focus-visible {
   gap: 11px;
   margin: 0;
   font-size: 13px;
-  line-height: 1.45;
+  line-height: 1.5;
   font-weight: 600;
   color: var(--text-2);
   text-transform: none;
@@ -661,11 +671,11 @@ input:focus-visible {
   min-width: auto;
   font-size: 12px;
   letter-spacing: .02em;
-  font-weight: 800;
+  font-weight: 700;
   background: var(--brand-grad);
   color: #fff;
   border-color: transparent;
-  box-shadow: 0 2px 8px rgba(124,58,237,.25);
+  box-shadow: 0 2px 8px rgba(124,58,237,.22);
 }
 .fit-btn:hover { opacity: .9; background: var(--brand-grad); color: #fff; }
 
@@ -674,8 +684,9 @@ input:focus-visible {
   text-align: center;
   color: var(--muted);
   font-size: 11.5px;
-  font-weight: 700;
+  font-weight: 600;
   font-family: var(--font-mono);
+  letter-spacing: 0;
 }
 
 .preview-scroll {
@@ -683,7 +694,7 @@ input:focus-visible {
   min-height: 0;
   overflow: auto;
   padding: 20px;
-  background: #E8E8EF;
+  background: #E6E5EE;
   border-radius: var(--r-lg) var(--r-lg) 0 0;
   border: 1px solid var(--line);
   border-bottom: none;
@@ -710,10 +721,10 @@ input:focus-visible {
 /* ── Section Helper ─────────────────────────────────────────── */
 .section-helper {
   color: var(--muted);
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 500;
   margin: 4px 0 0;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 /* ── Load Error ─────────────────────────────────────────────── */
@@ -737,7 +748,7 @@ input:focus-visible {
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(10, 9, 20, .55);
+  background: rgba(10, 9, 20, .58);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
@@ -847,7 +858,7 @@ input:focus-visible {
 .modal-tab-btn.is-active {
   background: var(--brand-grad);
   color: #fff;
-  box-shadow: 0 2px 8px rgba(124, 58, 237, .25);
+  box-shadow: 0 2px 8px rgba(124, 58, 237, .22);
 }
 
 .admin-tab-panel { display: none; }
@@ -886,22 +897,23 @@ body.vrxe-pdf-rendering #quotationPreview {
   text-transform: uppercase;
   margin-bottom: 12px;
   width: fit-content;
+  font-family: var(--font-ui);
 }
 
 /* Main product — dark */
 .item-card[data-type="main"] {
   border-color: var(--line-strong);
-  background: #FAFAFB;
+  background: #FAFAFD;
   border-left: 3px solid var(--text);
 }
 .item-card[data-type="main"] .item-type-badge {
-  background: #16151B;
+  background: #14131A;
   color: #fff;
 }
 
 /* Inclusion — green */
 .item-card[data-type="inclusion"] {
-  background: #F6FDF9;
+  background: #F5FDF8;
   border-color: #BBF7D0;
   border-left: 3px solid var(--green);
 }
@@ -914,7 +926,7 @@ body.vrxe-pdf-rendering #quotationPreview {
 
 /* Additional — amber */
 .item-card[data-type="additional"] {
-  background: #FFFCF4;
+  background: var(--amber-bg);
   border-color: #FDE68A;
   border-left: 3px solid var(--amber);
 }
@@ -973,9 +985,10 @@ body.vrxe-pdf-rendering #quotationPreview {
 
 .tokens-label {
   margin: 0 0 14px;
-  font-size: 12px;
+  font-size: 12.5px;
   color: var(--muted);
   font-weight: 600;
+  line-height: 1.5;
 }
 
 .tokens-label code {

@@ -58,7 +58,7 @@
     gap: 8px;
     white-space: nowrap;
   }
-  .tab-number { width: 22px; height: 22px; flex-basis: 22px; font-size: 10.5px; }
+  .tab-number { width: 22px; height: 22px; flex-basis: 22px; font-size: 10px; }
   #openAdminSettingsBtn.admin-tab { padding: 8px 14px; }
   #openAdminSettingsBtn.admin-tab .tab-text { flex-direction: row; gap: 5px; align-items: center; }
   #openAdminSettingsBtn.admin-tab .tab-text small { display: none; }
@@ -122,7 +122,7 @@
     -webkit-backdrop-filter: blur(10px);
     padding: 8px 12px;
     gap: 8px;
-    box-shadow: 0 2px 8px rgba(20,18,35,.06);
+    box-shadow: 0 2px 8px rgba(18,15,38,.06);
   }
 
   .mptb-btn {
@@ -146,7 +146,7 @@
     background: var(--brand-grad);
     color: #fff;
     border-color: transparent;
-    box-shadow: 0 4px 14px rgba(124,58,237,.30);
+    box-shadow: 0 4px 14px rgba(124,58,237,.28);
   }
   .mptb-btn svg { flex-shrink: 0; }
 
@@ -194,7 +194,7 @@
     gap: 12px;
     width: 100%;
     padding: 10px 13px;
-    border: 1.5px solid var(--line-strong);
+    border: 1.5px solid var(--input-border);
     border-radius: var(--r-md);
     background: var(--soft);
     color: var(--text);
@@ -215,12 +215,13 @@
     display: inline-grid; place-items: center;
     border-radius: 50%;
     background: var(--brand-grad); color: #fff;
-    font-size: 12px; font-weight: 800; font-family: var(--font-mono);
+    font-size: 12px; font-weight: 700; font-family: var(--font-mono);
+    letter-spacing: 0;
   }
 
   .nav-dd-titles { display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1; }
-  .nav-dd-kicker { font-size: 9px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
-  .nav-dd-label { font-size: 14px; font-weight: 800; letter-spacing: -.01em; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .nav-dd-kicker { font-size: 9px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+  .nav-dd-label { font-size: 14px; font-weight: 700; letter-spacing: -.01em; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .nav-dd-caret { flex: 0 0 auto; color: var(--muted); transition: transform .18s var(--ease); }
   .nav-dropdown.is-open .nav-dd-caret { transform: rotate(180deg); }
 
@@ -248,8 +249,8 @@
     flex: 0 0 24px; width: 24px; height: 24px;
     display: inline-grid; place-items: center; border-radius: 50%;
     border: 1.5px solid var(--line-strong);
-    background: #fff; color: var(--text-2); font-size: 11px; font-weight: 800;
-    font-family: var(--font-mono);
+    background: #fff; color: var(--text-2); font-size: 10px; font-weight: 700;
+    font-family: var(--font-mono); letter-spacing: 0;
   }
   .nav-dd-item.is-active .nav-dd-item-num {
     background: var(--brand-grad);
@@ -292,12 +293,15 @@
   .section-kicker { font-size: 9.5px; }
   .grid.two { grid-template-columns: 1fr; }
 
+  /* Mobile input sizing — 16px prevents iOS zoom */
+  input, textarea { font-size: 16px; }
+
   /* Footer */
   .tab-footer {
     flex: 0 0 auto; width: 100%;
     border-radius: 0; border: 0; border-top: 1px solid var(--line);
     padding: 10px 14px 14px; background: #fff;
-    box-shadow: 0 -2px 10px rgba(20,18,35,.06);
+    box-shadow: 0 -2px 10px rgba(18,15,38,.06);
     display: flex; justify-content: space-between; gap: 10px;
   }
   .tab-footer .primary-btn, .tab-footer .ghost-btn {
@@ -329,12 +333,12 @@
     padding: 12px 20px; font-size: 14px; border-radius: var(--r-md);
     background: var(--brand-grad); color: #fff; border: none;
     cursor: pointer; font: inherit; font-weight: 700;
-    box-shadow: 0 6px 18px rgba(124,58,237,.30);
+    box-shadow: 0 6px 18px rgba(124,58,237,.28);
     transition: transform .12s, box-shadow .12s; flex-shrink: 0;
   }
   .mobile-preview-download-btn:active {
     transform: scale(.98);
-    box-shadow: 0 2px 8px rgba(124,58,237,.20);
+    box-shadow: 0 2px 8px rgba(124,58,237,.18);
   }
 
   /* Item cards */
