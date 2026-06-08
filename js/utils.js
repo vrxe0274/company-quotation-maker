@@ -23,9 +23,15 @@ App.formatDateShort = (dateString) => {
 };
 
 App.generateQuoteCode = () => {
-  const year   = new Date().getFullYear();
-  const random = String(Math.floor(1 + Math.random() * 999)).padStart(3, "0");
-  return `QUO-${year}-0001-${random}`;
+  const now   = new Date();
+  const year  = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const key   = `vrxe_quote_seq_${year}_${month}`;
+
+  let seq = parseInt(localStorage.getItem(key) || "0", 10) + 1;
+  localStorage.setItem(key, String(seq));
+
+  return `QUO-${year}-${month}-${String(seq).padStart(4, "0")}`;
 };
 
 App.getValues = () => {

@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>VRXE Quotation Maker</title>
+  <title>VRXE Quote Generator</title>
 
   <meta name="description" content="Create polished VRXE business quotations and export them to PDF." />
-  <meta name="theme-color" content="#ffffff" />
+  <meta name="theme-color" content="#0D0D12" />
 
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="quotation.css" />
@@ -18,23 +18,23 @@
   <link rel="apple-touch-icon" href="assets/icon-192.png" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="VRXE Quote" />
 </head>
 <body>
   <div data-include="partials/header.html"></div>
 
   <main class="app-layout">
-    <!-- Sidebar: independent, not grouped with form content -->
+    <!-- Sidebar -->
     <div data-include="partials/tabs.html"></div>
 
-    <!-- Form content: form-panel class kept for mobileTabUI.js compatibility -->
+    <!-- Form content — form-panel class kept for mobileTabUI.js -->
     <div class="form-content form-panel">
       <div data-include="partials/form-panels.html"></div>
       <div data-include="partials/form-footer.html"></div>
     </div>
 
-    <!-- Preview panel: independent -->
+    <!-- Preview panel -->
     <div data-include="partials/preview.html"></div>
   </main>
 
@@ -58,7 +58,7 @@
   <script src="js/navMenu.js"></script>
   <script src="js/htmlIncludes.js"></script>
 
-  <!-- Service worker registration (PWA / offline app shell) -->
+  <!-- Service worker registration -->
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
