@@ -143,7 +143,7 @@
     transition: background .14s, border-color .14s, color .14s, box-shadow .14s;
   }
   .mptb-btn.is-active {
-    background: var(--brand-grad);
+    background: purple;
     color: #fff;
     border-color: transparent;
     box-shadow: 0 4px 14px rgba(124,58,237,.28);
@@ -214,7 +214,7 @@
     flex: 0 0 28px; width: 28px; height: 28px;
     display: inline-grid; place-items: center;
     border-radius: 50%;
-    background: var(--brand-grad); color: #fff;
+    background: black; color: #fff;
     font-size: 12px; font-weight: 700; font-family: var(--font-mono);
     letter-spacing: 0;
   }
@@ -253,7 +253,7 @@
     font-family: var(--font-mono); letter-spacing: 0;
   }
   .nav-dd-item.is-active .nav-dd-item-num {
-    background: var(--brand-grad);
+    background: black;
     border-color: transparent;
     color: #fff;
   }
@@ -331,7 +331,7 @@
     display: flex; align-items: center; justify-content: center;
     gap: 8px; width: 100%; margin-bottom: 10px;
     padding: 12px 20px; font-size: 14px; border-radius: var(--r-md);
-    background: var(--brand-grad); color: #fff; border: none;
+    background: black; color: #fff; border: none;
     cursor: pointer; font: inherit; font-weight: 700;
     box-shadow: 0 6px 18px rgba(124,58,237,.28);
     transition: transform .12s, box-shadow .12s; flex-shrink: 0;
