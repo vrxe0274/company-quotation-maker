@@ -30,16 +30,17 @@
   --input-border: #D8D6E8;
   --input-border-focus: #8B5CF6;
 
+  --btn-color:  black;
+
   /* Brand spectrum (VRXE) — violet → fuchsia → pink */
   --brand:       #7C3AED;
   --brand-mid:   #C026D3;
   --brand-end:   #EC4899;
   --brand-soft:  #F4F0FF;
   --brand-ring:  rgba(124, 58, 237, .15);
-  --brand-grad:  linear-gradient(135deg, #7C3AED 0%, #C026D3 55%, #EC4899 100%);
 
   /* Tab active gradient */
-  --tab-active-grad: linear-gradient(135deg, #8B3CF7 0%, #C026D3 55%, #EC4899 100%);
+  --tab-active: var(--btn-color);
 
   /* Semantic */
   --green:       #16A34A;
@@ -251,7 +252,7 @@ h1 {
 }
 
 .tab-btn.is-active {
-  background: var(--tab-active-grad);
+  background: var(--tab-active);
   color: #fff;
   box-shadow: 0 4px 16px rgba(124, 58, 237, .28);
 }
@@ -485,7 +486,7 @@ input[type="number"] { font-family: var(--font-mono); font-size: 14px; }
 
 /* Primary = purple gradient */
 .primary-btn {
-  background: var(--brand-grad);
+  background: var(--btn-color);
   color: #fff;
   border: none;
   box-shadow: 0 4px 14px rgba(124, 58, 237, .32);
@@ -672,12 +673,12 @@ input:focus-visible {
   font-size: 12px;
   letter-spacing: .02em;
   font-weight: 700;
-  background: var(--brand-grad);
+  background: var(--btn-color);
   color: #fff;
   border-color: transparent;
   box-shadow: 0 2px 8px rgba(124,58,237,.22);
 }
-.fit-btn:hover { opacity: .9; background: var(--brand-grad); color: #fff; }
+.fit-btn:hover { opacity: .9; background: var(--btn-color); color: #fff; }
 
 .zoom-level {
   min-width: 40px;
@@ -772,7 +773,7 @@ input:focus-visible {
   top: 0; left: 0; right: 0;
   height: 3px;
   border-radius: var(--r-xl) var(--r-xl) 0 0;
-  background: var(--brand-grad);
+  background: var(--btn-color);
 }
 
 @keyframes modalIn {
@@ -790,7 +791,7 @@ input:focus-visible {
   border-radius: 13px;
   margin-bottom: 14px;
   color: #fff;
-  background: var(--brand-grad);
+  background: var(--btn-color);
   box-shadow: var(--shadow-sm);
 }
 
@@ -856,7 +857,7 @@ input:focus-visible {
   transition: background .14s, color .14s, box-shadow .14s;
 }
 .modal-tab-btn.is-active {
-  background: var(--brand-grad);
+  background: var(--btn-color);
   color: #fff;
   box-shadow: 0 2px 8px rgba(124, 58, 237, .22);
 }
@@ -1017,7 +1018,7 @@ body.vrxe-pdf-rendering #quotationPreview {
   font-size: 10.5px;
   font-weight: 700;
   color: #fff;
-  background: var(--brand-grad);
+  background: var(--btn-color);
   padding: 2px 8px;
   border-radius: 5px;
   letter-spacing: .04em;
