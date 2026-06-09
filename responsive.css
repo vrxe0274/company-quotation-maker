@@ -103,8 +103,14 @@
   html { overflow: hidden; height: 100%; }
   body { height: 100%; overflow: hidden; }
 
-  /* Header */
-  .app-header { padding: 0 14px; height: 54px; gap: 10px; }
+  /* Header — sits flush at top, no extra top spacing */
+  .app-header {
+    padding: 0 14px;
+    height: 54px;
+    position: sticky;
+    top: 0;
+    margin-top: 0;
+  }
   .brand-logo-frame { width: 34px; height: 34px; border-radius: 9px; }
   .eyebrow { font-size: 8px; }
   h1 { font-size: 15px; }
@@ -156,6 +162,7 @@
     flex-direction: unset;
     padding: 0;
     gap: 0;
+    /* Account for header (54px) + tab bar (~58px) */
     height: calc(100vh - 54px - 58px);
     height: calc(100dvh - 54px - 58px);
     overflow: hidden;
@@ -273,7 +280,8 @@
 
   .tab-panel {
     background: #fff; border: 0; border-radius: 0;
-    padding: 20px 16px 16px; box-shadow: none; min-height: 100%;
+    padding: 16px 16px 0;
+    box-shadow: none; min-height: 100%;
   }
 
   #tab-services.is-active {
@@ -281,26 +289,41 @@
     display: flex;
     flex-direction: column;
     min-height: 100%;
+    padding-bottom: 0;
   }
   #tab-services.is-active #itemsList {
     flex: 1 1 auto;
     overflow-y: auto;
     max-height: none;
+    padding-bottom: 16px;
   }
 
   .section-title { margin-bottom: 16px; }
   h2 { font-size: 20px; }
   .section-kicker { font-size: 9.5px; }
-  .grid.two { grid-template-columns: 1fr; }
 
-  /* Mobile input sizing — 16px prevents iOS zoom */
-  input, textarea { font-size: 16px; }
+  /* Single-column grid — but keep date fields from overflowing */
+  .grid.two {
+    grid-template-columns: 1fr;
+  }
 
-  /* Footer */
+  /* Date input: constrain width and font so it fits on narrow screens */
+  input[type="date"] {
+    font-size: 14px;
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Mobile input sizing — 16px prevents iOS zoom on most inputs */
+  input:not([type="date"]), textarea { font-size: 16px; }
+
+  /* Footer — no extra bottom padding, relies on safe-area env() for notched phones */
   .tab-footer {
     flex: 0 0 auto; width: 100%;
     border-radius: 0; border: 0; border-top: 1px solid var(--line);
-    padding: 10px 14px 14px; background: #fff;
+    padding: 10px 14px env(safe-area-inset-bottom, 10px);
+    background: #fff;
     box-shadow: 0 -2px 10px rgba(18,15,38,.06);
     display: flex; justify-content: space-between; gap: 10px;
   }
@@ -308,7 +331,7 @@
     flex: 1; padding: 12px 14px; font-size: 13.5px;
   }
 
-  /* Preview panel */
+  /* Preview panel — no excess bottom space */
   .preview-panel {
     flex: unset;
     position: static;
@@ -324,7 +347,12 @@
     flex-direction: column;
     background: var(--bg);
   }
-  .preview-scroll { flex: 1; border-radius: var(--r-lg) var(--r-lg) 0 0; }
+  .preview-scroll {
+    flex: 1;
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+    /* Remove any implicit bottom gap */
+    margin-bottom: 0;
+  }
 
   /* Mobile download button */
   .mobile-preview-download-btn {
@@ -342,9 +370,11 @@
   }
 
   /* Item cards */
-  .item-card { padding: 14px 14px 12px; }
-  .item-grid { grid-template-columns: 1fr !important; padding-right: 44px !important; }
-  .remove-item-btn { top: 12px; right: 12px; width: 30px; height: 30px; font-size: 13px; }
+  .item-card { padding: 0; }
+  .item-card-header { padding: 10px 12px 0; }
+  .item-card-body { padding: 8px 14px 12px; }
+  .item-grid { grid-template-columns: 1fr !important; }
+  .remove-item-btn { width: 26px; height: 26px; font-size: 12px; }
   .verification-card { margin-bottom: 12px; }
   .add-row-btns { gap: 6px; flex-wrap: wrap; }
   .add-row-btns .ghost-btn { font-size: 12.5px; padding: 8px 12px; }
@@ -364,7 +394,7 @@
    4. SMALL MOBILE ≤ 480px
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 480px) {
-  .app-header { padding: 0 12px; height: 50px; }
+  .app-header { padding: 0 12px; height: 50px; margin-top: 0; }
   .brand-logo-frame { width: 30px; height: 30px; }
   h1 { font-size: 14px; }
   .eyebrow { display: none; }
@@ -372,11 +402,12 @@
   .mptb-btn { font-size: 12.5px; padding: 9px 10px; gap: 5px; }
   .app-layout { height: calc(100vh - 50px - 56px); height: calc(100dvh - 50px - 56px); }
   .preview-panel { height: calc(100vh - 50px - 56px); height: calc(100dvh - 50px - 56px); padding: 8px 10px 0; }
-  .tab-panel { padding: 16px 14px 14px; }
-  .tab-footer { padding: 9px 12px 12px; }
+  .tab-panel { padding: 14px 12px 0; }
+  .tab-footer { padding: 9px 12px env(safe-area-inset-bottom, 9px); }
   h2 { font-size: 18px; }
-  label { font-size: 11px; margin-bottom: 12px; }
-  input, textarea { font-size: 16px; padding: 10px 12px; }
+  label { font-size: 11px; margin-bottom: 10px; }
+  input:not([type="date"]), textarea { font-size: 16px; padding: 10px 12px; }
+  input[type="date"] { font-size: 14px; padding: 10px 12px; }
   .nav-dropdown { padding: 8px 12px; }
   .nav-dd-trigger { padding: 9px 12px; gap: 10px; }
   .nav-dd-label { font-size: 13.5px; }
@@ -396,7 +427,7 @@
    6. LANDSCAPE MOBILE
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 767px) and (orientation: landscape) {
-  .app-header { height: 46px; }
+  .app-header { height: 46px; margin-top: 0; }
   .brand-logo-frame { width: 28px; height: 28px; }
   h1 { font-size: 13px; }
   .eyebrow { display: none; }
@@ -404,8 +435,8 @@
   .mptb-btn { font-size: 12px; padding: 7px 10px; }
   .app-layout { height: calc(100vh - 46px - 50px); height: calc(100dvh - 46px - 50px); }
   .preview-panel { height: calc(100vh - 46px - 50px); height: calc(100dvh - 46px - 50px); }
-  .tab-panel { padding: 12px 16px 10px; }
-  .tab-footer { padding: 7px 16px 9px; }
+  .tab-panel { padding: 12px 16px 0; }
+  .tab-footer { padding: 7px 16px env(safe-area-inset-bottom, 7px); }
   h2 { font-size: 17px; }
   .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

@@ -54,6 +54,10 @@ App.buildItemCard = (item = {}) => {
   card.className  = "item-card";
   card.dataset.type = type;
 
+  /* ── Card header row (badge + toggle + remove) ── */
+  const cardHeader = document.createElement("div");
+  cardHeader.className = "item-card-header";
+
   /* ── Type badge ── */
   const badge = document.createElement("div");
   badge.className = "item-type-badge";
@@ -61,7 +65,11 @@ App.buildItemCard = (item = {}) => {
     type === "main"       ? "⬤  VR Booth (Main)"  :
     type === "additional" ? "+  Additional"         :
                             "✓  Inclusion";
-  card.appendChild(badge);
+  cardHeader.appendChild(badge);
+
+  /* ── Header right controls ── */
+  const headerControls = document.createElement("div");
+  headerControls.className = "item-card-controls";
 
   /* ── Remove button (not shown for "main") ── */
   if (type !== "main") {
@@ -71,14 +79,34 @@ App.buildItemCard = (item = {}) => {
     removeBtn.setAttribute("aria-label", "Remove service row");
     removeBtn.title = "Remove row";
     removeBtn.textContent = "🗑";
-    removeBtn.addEventListener("click", () => {
+    removeBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
       if (document.querySelectorAll(".item-card").length > 1) {
         card.remove();
         App.renderPreview();
       }
     });
-    card.appendChild(removeBtn);
+    headerControls.appendChild(removeBtn);
   }
+
+  /* ── Collapse toggle ── */
+  const toggleBtn = document.createElement("button");
+  toggleBtn.className = "item-toggle-btn";
+  toggleBtn.type = "button";
+  toggleBtn.setAttribute("aria-label", "Toggle row");
+  toggleBtn.setAttribute("aria-expanded", "true");
+  toggleBtn.innerHTML = `<svg class="item-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>`;
+  headerControls.appendChild(toggleBtn);
+
+  cardHeader.appendChild(headerControls);
+  card.appendChild(cardHeader);
+
+  /* ── Collapsible body ── */
+  const cardBody = document.createElement("div");
+  cardBody.className = "item-card-body";
 
   /* ── Grid ── */
   const grid = document.createElement("div");
@@ -163,10 +191,44 @@ App.buildItemCard = (item = {}) => {
   hCheck.className = "item-included";
   hCheck.type  = "hidden";
   hCheck.value = type === "inclusion" ? "1" : "0";
-  /* We'll read this specially in getItems — see note below */
   grid.appendChild(hCheck);
 
-  card.appendChild(grid);
+  cardBody.appendChild(grid);
+  card.appendChild(cardBody);
+
+  /* ── Collapsed service name preview (visible when folded) ── */
+  const collapsedPreview = document.createElement("div");
+  collapsedPreview.className = "item-collapsed-preview";
+  card.appendChild(collapsedPreview);
+
+  /* Update collapsed preview text when service input changes */
+  const updateCollapsedPreview = () => {
+    const name = iService.value.trim();
+    collapsedPreview.textContent = name || "(unnamed service)";
+  };
+  updateCollapsedPreview();
+  iService.addEventListener("input", updateCollapsedPreview);
+
+  /* ── Toggle logic ── */
+  let isExpanded = false;
+
+  const setExpanded = (expanded) => {
+    isExpanded = expanded;
+    card.classList.toggle("is-collapsed", !expanded);
+    toggleBtn.setAttribute("aria-expanded", expanded ? "true" : "false");
+  };
+
+  setExpanded(false);
+
+  toggleBtn.addEventListener("click", () => setExpanded(!isExpanded));
+  /* Clicking the collapsed preview row also expands */
+  collapsedPreview.addEventListener("click", () => setExpanded(true));
+  cardHeader.addEventListener("click", (e) => {
+    /* Only trigger collapse from the header itself, not its child buttons */
+    if (e.target === cardHeader || e.target === badge) {
+      setExpanded(!isExpanded);
+    }
+  });
 
   /* Wire all visible inputs to renderPreview */
   card.querySelectorAll("input:not([type=hidden]), textarea").forEach((input) => {
