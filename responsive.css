@@ -158,25 +158,28 @@
   }
   .mptb-btn svg { flex-shrink: 0; }
 
-  /* app-layout: absorbs all remaining height — overrides styles.css calc */
+  /* app-layout: absorbs all remaining height — overrides styles.css calc.
+     Must be flex so form-content can stretch to fill it with flex: 1. */
   .app-layout {
     flex: 1 1 0 !important;
     min-height: 0 !important;
-    height: auto !important;          /* cancel the calc(100vh - 62px) */
-    display: block;
+    height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
     overflow: hidden;
   }
 
   /* Sidebar hidden */
   .tabs { display: none !important; }
 
-  /* form-content: full flex column inside app-layout */
+  /* form-content: stretches to fill app-layout */
   .form-content {
+    flex: 1 1 0;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     width: 100%;
     max-width: 100%;
-    height: 100%;
     overflow: hidden;
     background: transparent;
     min-width: 0;
