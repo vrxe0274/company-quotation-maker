@@ -1,23 +1,23 @@
 /* ============================================================
    VRXE Quotation Maker — Responsive CSS
    ≤ 1200px  Compact desktop
-   ≤ 900px   Tablet
-   ≤ 767px   Mobile
-   ≤ 480px   Small mobile
+   ≤  900px  Tablet
+   ≤  767px  Mobile
+   ≤  480px  Small mobile
    ============================================================ */
 
 /* ══════════════════════════════════════════════════════════════
-   1. COMPACT DESKTOP ≤ 1200px
+   1. COMPACT DESKTOP  ≤ 1200px
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 1200px) {
-  .tabs { flex: 0 0 170px; width: 170px; padding: 16px 10px; }
-  .tab-panels { padding: 22px 24px 16px; }
-  .tab-footer { padding: 12px 24px 16px; }
+  .tabs          { flex: 0 0 170px; width: 170px; padding: 16px 10px; }
+  .tab-panels    { padding: 22px 24px 16px; }
+  .tab-footer    { padding: 12px 24px 16px; }
   .preview-panel { padding: 14px 14px 0; }
 }
 
 /* ══════════════════════════════════════════════════════════════
-   2. TABLET ≤ 900px
+   2. TABLET  ≤ 900px
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 900px) {
   html { overflow: auto; height: auto; }
@@ -49,60 +49,58 @@
   .tab-group-label,
   .tab-divider { display: none; }
 
-  .tab-btn { flex: 0 0 auto; padding: 8px 14px; gap: 8px; white-space: nowrap; }
+  .tab-btn    { flex: 0 0 auto; padding: 8px 14px; gap: 8px; white-space: nowrap; }
   .tab-number { width: 22px; height: 22px; flex-basis: 22px; font-size: 10px; }
-  #openAdminSettingsBtn.admin-tab { padding: 8px 14px; }
-  #openAdminSettingsBtn.admin-tab .tab-text { flex-direction: row; gap: 5px; align-items: center; }
+
+  #openAdminSettingsBtn.admin-tab                 { padding: 8px 14px; }
+  #openAdminSettingsBtn.admin-tab .tab-text       { flex-direction: row; gap: 5px; align-items: center; }
   #openAdminSettingsBtn.admin-tab .tab-text small { display: none; }
 
   .form-content { flex: 0 0 auto; width: 100%; height: auto; overflow: visible; }
-
-  .tab-panels { flex: none; overflow-y: visible; padding: 22px 20px 14px; min-height: 400px; }
-  .tab-footer { padding: 12px 20px 16px; }
+  .tab-panels   { overflow-y: visible; padding: 22px 20px 14px; min-height: 400px; }
+  .tab-footer   { padding: 12px 20px 16px; }
 
   .preview-panel {
-    flex: 0 0 auto; width: 100%; height: 560px;
-    border-left: none; border-top: 1px solid var(--line); padding: 16px 14px 0;
+    flex: 0 0 auto;
+    width: 100%;
+    height: 560px;
+    border-left: none;
+    border-top: 1px solid var(--line);
+    padding: 16px 14px 0;
   }
   .preview-scroll { height: calc(560px - 60px); }
-
-  #tab-services.is-active { max-height: none; }
-  #tab-services.is-active #itemsList { max-height: 360px; overflow-y: auto; }
 }
 
 /* ══════════════════════════════════════════════════════════════
-   3. MOBILE ≤ 767px
+   3. MOBILE  ≤ 767px
 
-   DOM order injected by JS (all siblings inside <body>):
+   DOM order (JS-injected siblings inside <body>):
      .app-header
-     #mobilePrimaryTabBar        ← injected by mobileTabUI.js
+     #mobilePrimaryTabBar   ← mobileTabUI.js
      .app-layout
-       .form-content             ← contains nav-dropdown + tab-panels + tab-footer
+       .form-content        ← nav-dropdown + tab-panels + tab-footer
        .preview-panel
 
-   Strategy: make <body> a flex-column so all three children
-   stack and fill 100dvh without any calc() on pixel heights.
-   app-layout gets flex:1 so it fills whatever is left after
-   the header and tab-bar.
+   Strategy: body = flex column → fills 100svh. app-layout gets
+   flex:1 for whatever remains after header + tab-bar.
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 767px) {
 
   html { overflow: hidden; height: 100%; }
 
-  /* body becomes the flex column that fills the screen */
   body {
     height: 100%;
-    height: 100svh;           /* svh = small viewport height — excludes the safe area on iOS PWA */
+    height: 100svh;                              /* excludes iOS safe area */
     overflow: hidden;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    background: #fff;         /* fills the safe-area zone with white instead of void */
-    padding-bottom: env(safe-area-inset-bottom);  /* shrinks the flex space so footer sits above the bar */
+    background: #fff;
+    padding-bottom: env(safe-area-inset-bottom); /* footer clears home bar */
     touch-action: pan-y;
   }
 
-  /* Header: fixed height, never grows */
+  /* ── Header ─────────────────────────────────────────────── */
   .app-header {
     flex: 0 0 auto;
     padding: 0 14px;
@@ -111,17 +109,15 @@
     gap: 10px;
   }
   .brand-logo-frame { width: 34px; height: 34px; border-radius: 9px; }
-  .eyebrow { font-size: 8px; }
-  h1 { font-size: 15px; }
-  #downloadPdfBtn { display: none; }
+  .eyebrow          { font-size: 8px; }
+  h1                { font-size: 15px; }
+  #downloadPdfBtn   { display: none; }
 
-  /* Mobile tab bar (Forms | Preview): fixed height, never grows */
+  /* ── Mobile primary tab bar (Forms | Preview) ────────────── */
   .mobile-primary-tab-bar {
     flex: 0 0 auto;
     display: flex;
-    /* Override the sticky positioning from mobileTabUI so it
-       participates in the body flex flow instead */
-    position: relative !important;
+    position: relative !important; /* participates in body flex, not sticky */
     top: auto !important;
     z-index: 90;
     background: rgba(255,255,255,.97);
@@ -159,8 +155,7 @@
   }
   .mptb-btn svg { flex-shrink: 0; }
 
-  /* app-layout: absorbs all remaining height — overrides styles.css calc.
-     Must be flex so form-content can stretch to fill it with flex: 1. */
+  /* ── Layout skeleton ─────────────────────────────────────── */
   .app-layout {
     flex: 1 1 0 !important;
     min-height: 0 !important;
@@ -170,21 +165,34 @@
     overflow: hidden;
   }
 
-  /* Sidebar hidden */
-  .tabs { display: none !important; }
+  .tabs { display: none !important; } /* sidebar hidden on mobile */
 
-  /* form-content: stretches to fill app-layout */
+  /* form-content fills remaining app-layout height;
+     overflow: hidden so only tab-panels scrolls, not the whole column */
   .form-content {
     flex: 1 1 0;
     min-height: 0;
     display: flex;
     flex-direction: column;
     width: 100%;
-    overflow-y: auto;        /* scroll here now */
-    overflow-x: hidden;
+    overflow: hidden;
   }
 
-  /* Nav dropdown */
+  /* ── Tab panels & individual panels ─────────────────────── */
+  /* tab-panels is a flex column; tab-panel stretches to fill it */
+  .tab-panels {
+    flex: 1 1 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tab-panel {
+    flex: 1 1 0;
+    min-height: 0;
+  }
+
+  /* ── Step nav dropdown ───────────────────────────────────── */
   .nav-dropdown {
     display: block;
     position: relative;
@@ -211,9 +219,10 @@
   }
   .nav-dd-titles { display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1; }
   .nav-dd-kicker { font-size: 9px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
-  .nav-dd-label { font-size: 14px; font-weight: 700; letter-spacing: -.01em; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .nav-dd-caret { flex: 0 0 auto; color: var(--muted); transition: transform .18s var(--ease); }
+  .nav-dd-label  { font-size: 14px; font-weight: 700; letter-spacing: -.01em; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .nav-dd-caret  { flex: 0 0 auto; color: var(--muted); transition: transform .18s var(--ease); }
   .nav-dropdown.is-open .nav-dd-caret { transform: rotate(180deg); }
+
   .nav-dd-menu {
     position: absolute; top: calc(100% - 4px); left: 12px; right: 12px; z-index: 95;
     background: #fff; border: 1px solid var(--line); border-radius: var(--r-md);
@@ -222,13 +231,17 @@
     transition: opacity .16s var(--ease), transform .16s var(--ease);
   }
   .nav-dropdown.is-open .nav-dd-menu { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
   .nav-dd-item {
     display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px;
     border: 0; border-radius: var(--r-sm); background: transparent; color: var(--text-2);
-    font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; text-align: left; transition: background .12s;
+    font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; text-align: left;
+    transition: background .12s;
   }
-  .nav-dd-item:hover, .nav-dd-item:active { background: var(--soft); }
+  .nav-dd-item:hover,
+  .nav-dd-item:active    { background: var(--soft); }
   .nav-dd-item.is-active { background: var(--brand-soft); color: var(--text); }
+
   .nav-dd-item-num {
     flex: 0 0 24px; width: 24px; height: 24px; display: inline-grid; place-items: center;
     border-radius: 50%; border: 1.5px solid var(--line-strong);
@@ -237,50 +250,38 @@
   }
   .nav-dd-item.is-active .nav-dd-item-num { background: black; border-color: transparent; color: #fff; }
   .nav-dd-item-num-admin { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+
   .nav-dd-item-text { flex: 1; min-width: 0; }
-  .nav-dd-check { flex: 0 0 auto; color: var(--brand); opacity: 0; transition: opacity .12s; }
+  .nav-dd-check     { flex: 0 0 auto; color: var(--brand); opacity: 0; transition: opacity .12s; }
   .nav-dd-item.is-active .nav-dd-check { opacity: 1; }
-  .nav-dd-sep { height: 1px; margin: 6px 8px; background: var(--line); }
+  .nav-dd-sep       { height: 1px; margin: 6px 8px; background: var(--line); }
 
- /* In the @media (max-width: 767px) block — replace the existing .tab-panels rule */
-
-.tab-panels {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  border: 0;
-  border-radius: 0;
-  padding: 0;
-  box-shadow: none;
-  background: var(--bg);
-  scrollbar-width: thin;
-  /* Remove min-height: 100% from children pulling it open */
-}
-
-.tab-panel {
-  flex: 1;
-  border: 0;
-  border-radius: 0;
-  padding: 16px 16px 0;
-  box-shadow: none;
-  min-height: 0; /* <-- was 100%, which was causing the gap */
-}
-
-  #tab-services.is-active {
-    max-height: none; display: flex; flex-direction: column; min-height: 100%; padding-bottom: 0;
+  /* ── Tab footer ──────────────────────────────────────────── */
+  /* flex: 0 0 auto keeps footer at natural height, never pushed out */
+  .tab-footer {
+    flex: 0 0 auto;
+    position: relative;
+    z-index: 10;
+    padding: 10px 14px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
   }
-  #tab-services.is-active #itemsList {
-    flex: 1 1 auto; overflow-y: auto; max-height: none; padding-bottom: 16px;
-  }
+  .tab-footer .primary-btn,
+  .tab-footer .ghost-btn { flex: 1; padding: 12px 14px; font-size: 13.5px; }
 
-  .section-title { margin-bottom: 16px; }
-  h2 { font-size: 20px; }
+  /* ── Typography & form fields ────────────────────────────── */
+  .section-title  { margin-bottom: 16px; }
+  h2              { font-size: 20px; }
   .section-kicker { font-size: 9.5px; }
 
-  /* Single-column grid on mobile */
   .grid.two { grid-template-columns: 1fr; }
 
-  /* ── Date & time inputs: prevent overflow on mobile ── */
+  label {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    display: grid;
+  }
+
   input[type="date"],
   input[type="time"],
   input[type="text"] {
@@ -292,35 +293,13 @@
   }
   input[type="date"] {
     font-size: 14px;
-    /* prevent iOS native date picker from spilling outside the label */
     -webkit-appearance: none;
     appearance: none;
   }
-  label {
-    min-width: 0;
-    max-width: 100%;
-    overflow: hidden;
-    /* ensure the label itself is also a proper block so inputs fill it */
-    display: grid;
-  }
-  input:not([type="date"]):not([type="time"]), textarea { font-size: 16px; }
+  input:not([type="date"]):not([type="time"]),
+  textarea { font-size: 16px; }
 
-  /* Footer: flex child, sits flush at bottom.
-     padding-bottom absorbs the PWA/iOS home-indicator safe area so
-     the white background extends all the way down with no gap. */
-  .tab-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 50;
-    padding-bottom: calc(10px + env(safe-area-inset-bottom));
-  }
-  .tab-footer .primary-btn, .tab-footer .ghost-btn {
-    flex: 1; padding: 12px 14px; font-size: 13.5px;
-  }
-
-  /* Preview panel */
+  /* ── Preview panel ───────────────────────────────────────── */
   .preview-panel {
     flex: unset;
     position: static;
@@ -344,71 +323,85 @@
     transition: transform .12s, box-shadow .12s; flex-shrink: 0;
   }
   .mobile-preview-download-btn:active {
-    transform: scale(.98); box-shadow: 0 2px 8px rgba(124,58,237,.18);
+    transform: scale(.98);
+    box-shadow: 0 2px 8px rgba(124,58,237,.18);
   }
 
-  .item-card { padding: 0; }
+  /* ── Item cards ──────────────────────────────────────────── */
+  .item-card        { padding: 0; }
   .item-card-header { padding: 10px 12px 0; }
-  .item-card-body { padding: 8px 14px 12px; }
-  .item-grid { grid-template-columns: 1fr !important; }
-  .remove-item-btn { width: 26px; height: 26px; font-size: 12px; }
-  .verification-card { margin-bottom: 12px; }
-  .add-row-btns { gap: 6px; flex-wrap: wrap; }
+  .item-card-body   { padding: 8px 14px 12px; }
+  .item-grid        { grid-template-columns: 1fr !important; }
+  .remove-item-btn  { width: 26px; height: 26px; font-size: 12px; }
+
+  .verification-card       { margin-bottom: 12px; }
+  .add-row-btns            { gap: 6px; flex-wrap: wrap; }
   .add-row-btns .ghost-btn { font-size: 12.5px; padding: 8px 12px; }
 
-  .admin-modal { padding: 22px 16px; max-height: 92vh; }
-  .modal-tabs { overflow-x: auto; scrollbar-width: none; }
-  .admin-modal .grid.two { grid-template-columns: 1fr; }
+  /* ── Admin modal ─────────────────────────────────────────── */
+  .admin-modal                  { padding: 22px 16px; max-height: 92vh; }
+  .modal-tabs                   { overflow-x: auto; scrollbar-width: none; }
+  .admin-modal .grid.two        { grid-template-columns: 1fr; }
   .payment-tokens-box .grid.two { grid-template-columns: 1fr; }
 
-  .zoom-btn { min-width: 28px; height: 28px; font-size: 14px; }
+  /* ── Zoom controls ───────────────────────────────────────── */
+  .zoom-btn   { min-width: 28px; height: 28px; font-size: 14px; }
   .zoom-level { font-size: 11px; min-width: 36px; }
 }
 
 /* ══════════════════════════════════════════════════════════════
-   4. SMALL MOBILE ≤ 480px
+   4. SMALL MOBILE  ≤ 480px
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 480px) {
-  .app-header { padding: 0 12px; padding-top: env(safe-area-inset-top); height: calc(50px + env(safe-area-inset-top)); }
+  .app-header       { padding: 0 12px; padding-top: env(safe-area-inset-top); height: calc(50px + env(safe-area-inset-top)); }
   .brand-logo-frame { width: 30px; height: 30px; }
-  h1 { font-size: 14px; }
-  .eyebrow { display: none; }
+  h1                { font-size: 14px; }
+  .eyebrow          { display: none; }
+
   .mobile-primary-tab-bar { padding: 7px 12px; gap: 6px; }
-  .mptb-btn { font-size: 12.5px; padding: 9px 10px; gap: 5px; }
-  .tab-panel { padding: 14px 12px 14px; }
+  .mptb-btn               { font-size: 12.5px; padding: 9px 10px; gap: 5px; }
+
   .tab-footer { padding: 9px 12px 9px; }
-  h2 { font-size: 18px; }
+
+  h2    { font-size: 18px; }
   label { font-size: 11px; margin-bottom: 10px; }
-  input:not([type="date"]):not([type="time"]), textarea { font-size: 16px; padding: 10px 12px; }
+
+  input:not([type="date"]):not([type="time"]),
+  textarea           { font-size: 16px; padding: 10px 12px; }
   input[type="date"],
   input[type="time"] { font-size: 14px; padding: 10px 12px; }
-  .nav-dropdown { padding: 8px 12px; }
+
+  .nav-dropdown   { padding: 8px 12px; }
   .nav-dd-trigger { padding: 9px 12px; gap: 10px; }
-  .nav-dd-label { font-size: 13.5px; }
-  .nav-dd-badge { flex-basis: 26px; width: 26px; height: 26px; }
+  .nav-dd-label   { font-size: 13.5px; }
+  .nav-dd-badge   { flex-basis: 26px; width: 26px; height: 26px; }
+
   .add-row-btns .ghost-btn { font-size: 12px; padding: 7px 10px; }
+
   .admin-modal { padding: 18px 13px; }
 }
 
 /* ══════════════════════════════════════════════════════════════
-   5. TALL MOBILE
+   5. TALL MOBILE  ≤ 767px + min-height 812px
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 767px) and (min-height: 812px) {
-  #tab-services.is-active #itemsList { max-height: none; }
+  /* itemsList inner scroll handles its own height — no override needed */
 }
 
 /* ══════════════════════════════════════════════════════════════
-   6. LANDSCAPE MOBILE
+   6. LANDSCAPE MOBILE  ≤ 767px landscape
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 767px) and (orientation: landscape) {
-  .app-header { padding-top: env(safe-area-inset-top); height: calc(46px + env(safe-area-inset-top)); }
+  .app-header       { padding-top: env(safe-area-inset-top); height: calc(46px + env(safe-area-inset-top)); }
   .brand-logo-frame { width: 28px; height: 28px; }
-  h1 { font-size: 13px; }
-  .eyebrow { display: none; }
+  h1                { font-size: 13px; }
+  .eyebrow          { display: none; }
+
   .mobile-primary-tab-bar { padding: 5px 12px; gap: 7px; }
-  .mptb-btn { font-size: 12px; padding: 7px 10px; }
-  .tab-panel { padding: 12px 16px 0; }
+  .mptb-btn               { font-size: 12px; padding: 7px 10px; }
+
   .tab-footer { padding: 7px 16px 9px; }
-  h2 { font-size: 17px; }
+
+  h2        { font-size: 17px; }
   .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
