@@ -96,8 +96,8 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    /* PWA safe area — fills the gap at the bottom in standalone mode */
-    padding-bottom: env(safe-area-inset-bottom);
+    /* No bottom padding here — the footer carries the safe-area inset
+       so its background colour extends all the way to the home indicator */
     box-sizing: border-box;
   }
 
@@ -293,16 +293,15 @@
   }
   input:not([type="date"]):not([type="time"]), textarea { font-size: 16px; }
 
-  /* Footer: flex child, sits flush at bottom, no calc needed.
-     NOTE: padding-bottom is intentionally zero here because body
-     already carries env(safe-area-inset-bottom) via padding-bottom.
-     This avoids double-counting the safe area. */
+  /* Footer: flex child, sits flush at bottom.
+     padding-bottom absorbs the PWA/iOS home-indicator safe area so
+     the white background extends all the way down with no gap. */
   .tab-footer {
     flex: 0 0 auto;
     width: 100%;
     border-radius: 0; border: 0;
     border-top: 1px solid var(--line);
-    padding: 10px 14px;
+    padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
     background: #fff;
     box-shadow: 0 -2px 10px rgba(18,15,38,.06);
     display: flex;
@@ -370,7 +369,7 @@
   .mobile-primary-tab-bar { padding: 7px 12px; gap: 6px; }
   .mptb-btn { font-size: 12.5px; padding: 9px 10px; gap: 5px; }
   .tab-panel { padding: 14px 12px 0; }
-  .tab-footer { padding: 9px 12px; }
+  .tab-footer { padding: 9px 12px calc(9px + env(safe-area-inset-bottom)); }
   h2 { font-size: 18px; }
   label { font-size: 11px; margin-bottom: 10px; }
   input:not([type="date"]):not([type="time"]), textarea { font-size: 16px; padding: 10px 12px; }
@@ -402,7 +401,7 @@
   .mobile-primary-tab-bar { padding: 5px 12px; gap: 7px; }
   .mptb-btn { font-size: 12px; padding: 7px 10px; }
   .tab-panel { padding: 12px 16px 0; }
-  .tab-footer { padding: 7px 16px; }
+  .tab-footer { padding: 7px 16px calc(9px + env(safe-area-inset-bottom)); }
   h2 { font-size: 17px; }
   .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
