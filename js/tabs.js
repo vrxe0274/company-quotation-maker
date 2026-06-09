@@ -78,8 +78,9 @@ App.setActiveTab = (tabName) => {
 
   const currentIndex = App.tabOrder.indexOf(tabName);
   App.$("prevTabBtn").disabled = currentIndex === 0;
-  App.$("nextTabBtn").textContent =
-    currentIndex === App.tabOrder.length - 1 ? "Back to Start" : "Next";
+
+  const nextLabel = App.$("nextTabBtn").querySelector("span");
+  if (nextLabel) nextLabel.textContent = currentIndex === App.tabOrder.length - 1 ? "Back to Start" : "Next";
 
   App.updateTabProgress();
 };

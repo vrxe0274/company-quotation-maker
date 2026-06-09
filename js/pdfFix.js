@@ -32,8 +32,8 @@
 
   App.downloadPdf = async function () {
     var canvas     = document.getElementById("previewCanvas");
-    var savedScale = (App.state && App.state.previewScale) || 1;
-    var savedFit   = (App.state && App.state.isFitMode)    || true;
+    var savedScale = App.state ? App.state.previewScale : 1;
+    var savedFit   = App.state ? App.state.isFitMode   : true;
 
     /* ── 1. Reset transform: capture at native 794 × 1123 px ── */
     if (canvas) {

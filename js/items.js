@@ -11,41 +11,6 @@
                 no Included checkbox. Can be deleted.
    ============================================================ */
 
-/* Read all item cards back into plain objects for the renderer */
-App.getItems = () => {
-  return [...document.querySelectorAll(".item-card")].map((card) => {
-    const type = card.dataset.type || "inclusion";
-
-    if (type === "inclusion") {
-      return {
-        type,
-        service:       card.querySelector(".item-service")?.value.trim() || "",
-        description:   card.querySelector(".item-description")?.value.trim() || "",
-        details:       (card.querySelector(".item-details")?.value || "")
-                         .split("\n").map(x => x.trim()).filter(Boolean),
-        originalPrice: 0,
-        finalPrice:    0,
-        included:      true,
-        total:         0
-      };
-    }
-
-    // main / additional — have real price inputs
-    const finalPrice = Number(card.querySelector(".item-final")?.value) || 0;
-    return {
-      type,
-      service:       card.querySelector(".item-service")?.value.trim() || "",
-      description:   card.querySelector(".item-description")?.value.trim() || "",
-      details:       (card.querySelector(".item-details")?.value || "")
-                       .split("\n").map(x => x.trim()).filter(Boolean),
-      originalPrice: Number(card.querySelector(".item-original")?.value) || 0,
-      finalPrice,
-      included:      false,
-      total:         finalPrice
-    };
-  });
-};
-
 /* ── Build a card DOM element ─────────────────────────────── */
 App.buildItemCard = (item = {}) => {
   const type = item.type || "inclusion";
@@ -137,7 +102,6 @@ App.buildItemCard = (item = {}) => {
   /* Details textarea (all types, full width) */
   const lDetails = document.createElement("label");
   lDetails.textContent = "Details / Bullets";
-  lDetails.style.gridColumn = "1 / -1";
   const ta = document.createElement("textarea");
   ta.className = "item-details";
   ta.rows = 3;
@@ -246,8 +210,6 @@ App.addItem = (item = {}) => {
   App.renderPreview();
 };
 
-/* ── Re-read inclusions: hidden checkbox value "1" → included=true */
-/* Override getItems to handle hidden checkbox correctly */
 App.getItems = () => {
   return [...document.querySelectorAll(".item-card")].map((card) => {
     const type = card.dataset.type || "inclusion";

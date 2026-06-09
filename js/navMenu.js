@@ -15,40 +15,33 @@
 (function () {
   "use strict";
 
-  var MOBILE_BP = 767;
-  function isMobile() { return window.innerWidth <= MOBILE_BP; }
+  const MOBILE_BP = 767;
+  const isMobile  = () => window.innerWidth <= MOBILE_BP;
 
-  var wrap = null, trigger = null, menu = null;
-  var built = false, open = false, lastMobile = null;
+  let wrap = null, trigger = null, menu = null;
+  let built = false, open = false, lastMobile = null;
 
-  function stepButtons() {
-    return Array.prototype.slice.call(
-      document.querySelectorAll(".tab-btn[data-tab]")
-    );
-  }
-  function adminButton() {
-    return document.getElementById("openAdminSettingsBtn");
-  }
-  function activeButton() {
-    return document.querySelector(".tab-btn[data-tab].is-active");
-  }
+  const stepButtons  = () => [...document.querySelectorAll(".tab-btn[data-tab]")];
+  const adminButton  = () => document.getElementById("openAdminSettingsBtn");
+  const activeButton = () => document.querySelector(".tab-btn[data-tab].is-active");
 
-  function activeIndex() {
-    var i = stepButtons().indexOf(activeButton());
+  const activeIndex = () => {
+    const i = stepButtons().indexOf(activeButton());
     return i < 0 ? 0 : i;
-  }
-  function activeLabel() {
-    var btn = activeButton();
+  };
+
+  const activeLabel = () => {
+    const btn = activeButton();
     if (!btn) return "Select step";
-    var t = btn.querySelector(".tab-text");
+    const t = btn.querySelector(".tab-text");
     return (t ? t.textContent : btn.textContent).trim();
-  }
+  };
 
   /* ── Build the dropdown once ─────────────────────────────── */
   function build() {
     if (built) return;
-    var tabs = document.querySelector(".tabs");
-    var formContent = document.querySelector(".form-content");
+    const tabs = document.querySelector(".tabs");
+    const formContent = document.querySelector(".form-content");
     if (!tabs || !formContent) return;
 
     wrap = document.createElement("div");
@@ -76,14 +69,14 @@
 
     rebuildMenu();
 
-    trigger.addEventListener("click", function (e) {
+    trigger.addEventListener("click", (e) => {
       e.stopPropagation();
       toggle();
     });
-    document.addEventListener("click", function (e) {
+    document.addEventListener("click", (e) => {
       if (open && wrap && !wrap.contains(e.target)) close();
     });
-    document.addEventListener("keydown", function (e) {
+    document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && open) close();
     });
 
@@ -99,43 +92,41 @@
     if (!menu) return;
     menu.innerHTML = "";
 
-    stepButtons().forEach(function (btn, i) {
-      var labelEl = btn.querySelector(".tab-text");
-      var item = document.createElement("button");
+    stepButtons().forEach((btn, i) => {
+      const labelEl = btn.querySelector(".tab-text");
+      const item = document.createElement("button");
       item.type = "button";
       item.className = "nav-dd-item";
       item.setAttribute("role", "menuitem");
       item.dataset.target = btn.dataset.tab;
       item.innerHTML =
-        '<span class="nav-dd-item-num">' + (i + 1) + "</span>" +
-        '<span class="nav-dd-item-text">' +
-          (labelEl ? labelEl.textContent.trim() : btn.dataset.tab) +
-        "</span>" +
+        `<span class="nav-dd-item-num">${i + 1}</span>` +
+        `<span class="nav-dd-item-text">${labelEl ? labelEl.textContent.trim() : btn.dataset.tab}</span>` +
         '<svg class="nav-dd-check" width="16" height="16" viewBox="0 0 24 24" fill="none" ' +
           'stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">' +
           '<polyline points="20 6 9 17 4 12"/></svg>';
-      item.addEventListener("click", function () {
-        btn.click();      /* drives the original tabs.js navigation */
+      item.addEventListener("click", () => {
+        btn.click();
         close();
         sync();
       });
       menu.appendChild(item);
     });
 
-    var admin = adminButton();
+    const admin = adminButton();
     if (admin) {
-      var sep = document.createElement("div");
+      const sep = document.createElement("div");
       sep.className = "nav-dd-sep";
       menu.appendChild(sep);
 
-      var adminItem = document.createElement("button");
+      const adminItem = document.createElement("button");
       adminItem.type = "button";
       adminItem.className = "nav-dd-item nav-dd-item-admin";
       adminItem.setAttribute("role", "menuitem");
       adminItem.innerHTML =
         '<span class="nav-dd-item-num nav-dd-item-num-admin">✓</span>' +
         '<span class="nav-dd-item-text">Terms &amp; Conditions</span>';
-      adminItem.addEventListener("click", function () {
+      adminItem.addEventListener("click", () => {
         admin.click();
         close();
       });
@@ -146,37 +137,36 @@
   /* ── Keep the trigger + active highlight in sync ─────────── */
   function sync() {
     if (!trigger) return;
-    var badge = trigger.querySelector(".nav-dd-badge");
-    var kicker = trigger.querySelector(".nav-dd-kicker");
-    var label = trigger.querySelector(".nav-dd-label");
-    var idx = activeIndex();
+    const badge  = trigger.querySelector(".nav-dd-badge");
+    const kicker = trigger.querySelector(".nav-dd-kicker");
+    const label  = trigger.querySelector(".nav-dd-label");
+    const idx    = activeIndex();
 
-    if (badge) badge.textContent = String(idx + 1);
-    if (kicker) kicker.textContent = "Step " + (idx + 1) + " of " + stepButtons().length;
-    if (label) label.textContent = activeLabel();
+    if (badge)  badge.textContent  = String(idx + 1);
+    if (kicker) kicker.textContent = `Step ${idx + 1} of ${stepButtons().length}`;
+    if (label)  label.textContent  = activeLabel();
 
     if (menu) {
-      var active = activeButton();
-      var tab = active ? active.dataset.tab : null;
-      Array.prototype.forEach.call(
-        menu.querySelectorAll(".nav-dd-item"),
-        function (it) {
-          it.classList.toggle("is-active", tab && it.dataset.target === tab);
-        }
-      );
+      const active = activeButton();
+      const tab = active ? active.dataset.tab : null;
+      menu.querySelectorAll(".nav-dd-item").forEach((it) => {
+        it.classList.toggle("is-active", Boolean(tab) && it.dataset.target === tab);
+      });
     }
   }
 
-  function toggle() { open ? close() : openMenu(); }
+  const toggle = () => open ? close() : openMenu();
+
   function openMenu() {
     if (!wrap) return;
     open = true;
     wrap.classList.add("is-open");
     trigger.setAttribute("aria-expanded", "true");
   }
+
   function close() {
     open = false;
-    if (wrap) wrap.classList.remove("is-open");
+    if (wrap)    wrap.classList.remove("is-open");
     if (trigger) trigger.setAttribute("aria-expanded", "false");
   }
 
@@ -200,17 +190,17 @@
         window.App.__navMenuHooked) {
       return;
     }
-    var orig = window.App.setActiveTab;
-    window.App.setActiveTab = function () {
-      var result = orig.apply(this, arguments);
+    const orig = window.App.setActiveTab;
+    window.App.setActiveTab = function (...args) {
+      const result = orig.apply(this, args);
       sync();
       return result;
     };
     window.App.__navMenuHooked = true;
   }
 
-  window.addEventListener("resize", function () {
-    var nm = isMobile();
+  window.addEventListener("resize", () => {
+    const nm = isMobile();
     if (nm === lastMobile) return;
     lastMobile = nm;
     apply();
@@ -224,20 +214,18 @@
 
   /* The HTML partials load asynchronously, so poll briefly until
      the tabs + form-content exist, then initialise. */
-  function waitAndStart(tries) {
-    tries = tries || 0;
-    if (document.querySelector(".tabs") &&
-        document.querySelector(".form-content")) {
+  function waitAndStart(tries = 0) {
+    if (document.querySelector(".tabs") && document.querySelector(".form-content")) {
       start();
       return;
     }
     if (tries > 80) return;
-    setTimeout(function () { waitAndStart(tries + 1); }, 120);
+    setTimeout(() => waitAndStart(tries + 1), 120);
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () { waitAndStart(0); });
+    document.addEventListener("DOMContentLoaded", () => waitAndStart());
   } else {
-    waitAndStart(0);
+    waitAndStart();
   }
 })();

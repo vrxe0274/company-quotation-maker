@@ -1,7 +1,7 @@
 App.init = () => {
   App.$("quoteCode").value = App.generateQuoteCode();
   App.$("quoteDate").value = App.todayISO();
-  App.$("eventDate").value = App.todayISO(); 
+  App.$("eventDate").value = App.todayISO();
 
   Object.entries(App.defaultFields).forEach(([id, value]) => {
     const field = App.$(id);
