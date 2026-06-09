@@ -375,7 +375,7 @@
   .eyebrow { display: none; }
   .mobile-primary-tab-bar { padding: 7px 12px; gap: 6px; }
   .mptb-btn { font-size: 12.5px; padding: 9px 10px; gap: 5px; }
-  .tab-panel { padding: 14px 12px 0; }
+  .tab-panel { padding: 14px 12px 14px; }
   .tab-footer { padding: 9px 12px 9px; }
   h2 { font-size: 18px; }
   label { font-size: 11px; margin-bottom: 10px; }
