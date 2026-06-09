@@ -915,16 +915,6 @@ input:focus-visible {
   animation: modalIn .22s var(--ease) both;
 }
 
-/* Brand top accent bar — matches the sidebar's active style. */
-.admin-modal::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  border-radius: var(--r-xl) var(--r-xl) 0 0;
-  background: var(--btn-fill);
-}
-
 @keyframes modalIn {
   from { opacity: 0; transform: translateY(14px) scale(.97); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
