@@ -1,15 +1,39 @@
 /* ============================================================
    VRXE Quotation Maker — UI Theme
    Design: clean white document studio, dark header,
-   purple/pink gradient accents, minimal sidebar navigation.
+   VRXE brand spectrum (violet → fuchsia → teal) as accent.
    Fonts: Figtree (UI) + JetBrains Mono (codes / numbers)
+
+   File organisation
+   ─────────────────
+   1.  Design Tokens  (:root)
+   2.  Reset
+   3.  Header
+   4.  Main Layout
+   5.  Sidebar & Tab Buttons
+   6.  Admin Tab Button
+   7.  Form Content & Panels
+   8.  Tab Footer
+   9.  Section Titles & Helpers
+   10. Form Fields
+   11. Buttons            ← shared hover/active utilities here
+   12. Services List & Item Cards
+   13. Verification Card
+   14. Preview Panel
+   15. Admin Modal
+   16. PDF export rendering fix
+   17. Item Type Badges
+   18. Add-row Buttons
+   19. Payment Terms Token Fields
+   20. Services tab desktop scroll
+   21. Reduced-motion override
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-/* ── Design Tokens ─────────────────────────────────────────── */
+/* ── 1. Design Tokens ──────────────────────────────────────── */
 :root {
-  /* Surfaces */
+  /* ── Surfaces ── */
   --bg:          #F8F8FF;
   --card:        #F8F8FF;
   --sidebar-bg:  #FFFFFF;
@@ -18,47 +42,77 @@
   --item-bg:     #FDFCFF;
   --header-bg:   #FFFFFF;
 
-  /* Text */
+  /* ── Text ── */
   --text:        #14131A;
   --text-2:      #3D3B4A;
   --muted:       #8A8799;
   --label:       #6A677A;
 
-  /* Borders */
-  --line:        #E6E4F0;
-  --line-strong: #CAC8DA;
-  --input-border: #D8D6E8;
+  /* ── Borders ── */
+  --line:               #E6E4F0;
+  --line-strong:        #CAC8DA;
+  --input-border:       #D8D6E8;
   --input-border-focus: #8B5CF6;
 
-  --btn-color:  black;
+  /* ── Brand / Accent ──
+     --brand-mid and --brand-end are reserved for future gradient
+     use (e.g. a top-of-page hero bar). They are intentionally
+     kept even though no rule currently references them, so
+     downstream CSS consumers don't need to redeclare them.    */
+  --brand:      #7C3AED;
+  --brand-mid:  #C026D3;  /* gradient midpoint — reserved */
+  --brand-end:  #EC4899;  /* gradient end     — reserved */
+  --brand-soft: #F4F0FF;
+  /* Semi-transparent brand used for focus rings and active
+     state glows. Centralised here so a single change updates
+     every usage site.                                         */
+  --brand-ring: rgba(124, 58, 237, .15);
 
-  /* Brand spectrum (VRXE) — violet → fuchsia → pink */
-  --brand:       #7C3AED;
-  --brand-mid:   #C026D3;
-  --brand-end:   #EC4899;
-  --brand-soft:  #F4F0FF;
-  --brand-ring:  rgba(124, 58, 237, .15);
+  /* ── Button fill ──
+     Named --btn-fill to accurately describe its role
+     (background colour, not foreground text colour).
+     REVIEW: was --btn-color in the original; the name was
+     misleading. All existing var(--btn-color) references in
+     this file have been updated to var(--btn-fill). Verify
+     any external CSS that may still use --btn-color.          */
+  --btn-fill: #000000;
 
-  /* Tab active gradient */
-  --tab-active: var(--btn-color);
+  /* ── Active tab uses the same fill as buttons ── */
+  --tab-active: var(--btn-fill);
 
-  /* Semantic */
+  /* ── Semantic colours ── */
   --green:       #16A34A;
   --green-bg:    #F0FDF4;
+  /* --green-light is available for callers but unused in this
+     file's own rules — kept for downstream token consumers. */
   --green-light: #DCFCE7;
   --amber:       #B45309;
   --amber-bg:    #FFFCF4;
   --red:         #DC2626;
   --red-bg:      #FEF2F2;
 
-  /* Shadows — warmer tint, more natural depth */
-  --shadow-xs:   0 1px 2px rgba(18, 15, 38, .05);
-  --shadow-sm:   0 2px 8px rgba(18, 15, 38, .08), 0 1px 2px rgba(18, 15, 38, .04);
-  --shadow-md:   0 4px 18px rgba(18, 15, 38, .09), 0 1px 4px rgba(18, 15, 38, .05);
-  --shadow-lg:   0 16px 40px rgba(18, 15, 38, .13), 0 4px 10px rgba(18, 15, 38, .06);
-  --shadow-xl:   0 28px 64px rgba(18, 15, 38, .18), 0 6px 16px rgba(18, 15, 38, .09);
+  /* ── Item-card surface colours ──
+     Extracted from inline rules to give them a single update
+     point and make theming / dark-mode easier later.         */
+  --item-main-bg:      #FAFAFD;
+  --item-inclusion-bg: #F5FDF8;
+  --item-inclusion-border: #BBF7D0;
+  --item-inclusion-border-hover: #86EFAC;
+  --item-additional-border: #FDE68A;
+  --item-additional-border-hover: #FCD34D;
 
-  /* Radius */
+  /* ── Shadows ──
+     --shadow-xs and --shadow-md are intentionally kept as
+     reserved tokens even though no rule in this file uses
+     them yet, so callers (e.g. component overrides) can
+     reference the full shadow scale without redefining it.   */
+  --shadow-xs: 0 1px 2px rgba(18, 15, 38, .05);
+  --shadow-sm: 0 2px 8px rgba(18, 15, 38, .08), 0 1px 2px rgba(18, 15, 38, .04);
+  --shadow-md: 0 4px 18px rgba(18, 15, 38, .09), 0 1px 4px rgba(18, 15, 38, .05);
+  --shadow-lg: 0 16px 40px rgba(18, 15, 38, .13), 0 4px 10px rgba(18, 15, 38, .06);
+  --shadow-xl: 0 28px 64px rgba(18, 15, 38, .18), 0 6px 16px rgba(18, 15, 38, .09);
+
+  /* ── Border radii ── */
   --r-xs:   5px;
   --r-sm:   8px;
   --r-md:   10px;
@@ -66,20 +120,21 @@
   --r-xl:   18px;
   --r-pill: 999px;
 
-  /* Typography */
+  /* ── Typography ── */
   --font-ui:   'Figtree', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Courier New', monospace;
 
-  /* Motion */
+  /* ── Motion ── */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* ── 2. Reset ──────────────────────────────────────────────── */
+/* Prevent scroll on the root so only the inner panels scroll. */
 html {
   overflow: hidden;
   height: 100%;
 }
 
-/* ── Reset ─────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
 
 body {
@@ -89,19 +144,23 @@ body {
   font-family: var(--font-ui);
   font-size: 14px;
   line-height: 1.6;
+  /* Subpixel anti-aliasing improves legibility of light-weight
+     Figtree on retina screens.                                */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
   overflow: hidden;
 }
 
+/* Remove default top margin so stacked headings don't leave
+   unexpected gaps when rendered as document sections.        */
 h1, h2, h3, p { margin-top: 0; }
-h1, h2 { margin-bottom: 0; }
-h3 { margin: 20px 0 10px; }
+h1, h2        { margin-bottom: 0; }
+h3            { margin: 20px 0 10px; }
 
 ::selection { background: var(--brand-soft); color: var(--text); }
 
-/* ── Header ─────────────────────────────────────────────────── */
+/* ── 3. Header ──────────────────────────────────────────────── */
 .app-header {
   position: sticky;
   top: 0;
@@ -113,6 +172,8 @@ h3 { margin: 20px 0 10px; }
   padding: 0 24px;
   height: 62px;
   background: var(--header-bg);
+  /* Subtle brand-tinted separator keeps the header visually
+     tied to the VRXE accent without a heavy line.            */
   border-bottom: 1px solid rgba(124, 58, 237, .12);
 }
 
@@ -148,7 +209,7 @@ h3 { margin: 20px 0 10px; }
 
 .eyebrow {
   margin: 0;
-  color: #14131ab6;
+  color: #14131ab6; /* intentional alpha on --text; token would lose the alpha */
   font-size: 9px;
   letter-spacing: .2em;
   text-transform: uppercase;
@@ -159,12 +220,14 @@ h1 {
   font-size: 17px;
   font-weight: 800;
   letter-spacing: -.03em;
-  color: #14131A;
+  color: var(--text);
   margin: 0;
   white-space: nowrap;
 }
 
-/* ── Main Layout ─────────────────────────────────────────────── */
+/* ── 4. Main Layout ─────────────────────────────────────────── */
+/* Three-column flex row: sidebar | form | preview.
+   Height is the remaining viewport after the fixed header.   */
 .app-layout {
   display: flex;
   flex-direction: row;
@@ -173,7 +236,7 @@ h1 {
   overflow: hidden;
 }
 
-/* ── Sidebar ─────────────────────────────────────────────────── */
+/* ── 5. Sidebar & Tab Buttons ──────────────────────────────── */
 .tabs {
   flex: 0 0 186px;
   width: 186px;
@@ -187,11 +250,15 @@ h1 {
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
+  /* Hide scrollbar track on the sidebar — the steps always
+     fit on normal viewports; this only affects very small
+     desktop heights.                                          */
   scrollbar-width: none;
 }
 .tabs::-webkit-scrollbar { display: none; }
 
-/* Hide sidebar brand on desktop — header handles branding */
+/* Header-level branding is used; the sidebar brand is hidden
+   on desktop to avoid visual repetition.                     */
 .tabs .sidebar-brand { display: none; }
 
 .tab-group-label {
@@ -255,28 +322,34 @@ h1 {
 .tab-btn.is-active {
   background: var(--tab-active);
   color: #fff;
-  box-shadow: 0 4px 16px rgba(124, 58, 237, .28);
+  box-shadow: 0 4px 16px var(--brand-ring);
 }
 
 .tab-btn.is-active .tab-number {
-  background: rgba(255,255,255,.2);
-  border-color: rgba(255,255,255,.35);
+  background: rgba(255, 255, 255, .2);
+  border-color: rgba(255, 255, 255, .35);
   color: #fff;
 }
 
+/* Completion badge: green circle replaces the step number. */
 .tab-number.is-complete {
   background: var(--green);
   border-color: var(--green);
   color: #fff;
 }
 
+/* When the tab is both active and complete, keep the active
+   white treatment so the dark button background stays readable. */
 .tab-btn.is-active .tab-number.is-complete {
-  background: rgba(255,255,255,.25);
-  border-color: rgba(255,255,255,.5);
+  background: rgba(255, 255, 255, .25);
+  border-color: rgba(255, 255, 255, .5);
   color: #fff;
 }
 
-/* ── Admin Tab Button ───────────────────────────────────────── */
+/* ── 6. Admin Tab Button ────────────────────────────────────── */
+/* The admin button has a different affordance from workflow
+   tabs — it opens a modal rather than switching a panel —
+   so it uses a bordered card style to signal that difference. */
 #openAdminSettingsBtn.admin-tab {
   margin-top: 2px;
   border: 1.5px solid var(--line);
@@ -326,15 +399,17 @@ h1 {
   text-transform: uppercase;
 }
 
+/* Green border signals the admin section is fully configured. */
 .tab-btn.admin-tab.is-complete {
   border-color: var(--green);
   background: var(--green-bg);
 }
 
-/* The mobile step dropdown is hidden on desktop */
+/* The mobile step dropdown is rendered by navMenu.js and
+   hidden on desktop via this rule.                           */
 .nav-dropdown { display: none; }
 
-/* ── Form Content ─────────────────────────────────────────────── */
+/* ── 7. Form Content & Panels ──────────────────────────────── */
 .form-content {
   flex: 1 1 0;
   min-width: 0;
@@ -345,7 +420,6 @@ h1 {
   background: var(--bg);
 }
 
-/* ── Tab Panels ─────────────────────────────────────────────── */
 .tab-panels {
   flex: 1;
   min-height: 0;
@@ -356,13 +430,12 @@ h1 {
   scrollbar-width: thin;
   scrollbar-color: var(--line-strong) transparent;
 }
-.tab-panels::-webkit-scrollbar { width: 5px; }
+.tab-panels::-webkit-scrollbar       { width: 5px; }
 .tab-panels::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 99px; }
 
-.tab-panel {
-  display: none;
-  animation: fadeUp .18s var(--ease) both;
-}
+/* Only the active panel is shown; the rest are kept in the
+   DOM so their form values are always accessible via JS.     */
+.tab-panel { display: none; animation: fadeUp .18s var(--ease) both; }
 .tab-panel.is-active { display: block; }
 
 @keyframes fadeUp {
@@ -370,7 +443,7 @@ h1 {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Tab Footer ─────────────────────────────────────────────── */
+/* ── 8. Tab Footer ──────────────────────────────────────────── */
 .tab-footer {
   flex: 0 0 auto;
   display: flex;
@@ -381,7 +454,7 @@ h1 {
   background: var(--card);
 }
 
-/* ── Section Titles ─────────────────────────────────────────── */
+/* ── 9. Section Titles & Helpers ────────────────────────────── */
 .section-title {
   display: flex;
   align-items: flex-start;
@@ -410,7 +483,15 @@ h2 {
   line-height: 1.15;
 }
 
-/* ── Form Fields ────────────────────────────────────────────── */
+.section-helper {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+  margin: 4px 0 0;
+  line-height: 1.6;
+}
+
+/* ── 10. Form Fields ────────────────────────────────────────── */
 .grid { display: grid; gap: 14px; }
 .two  { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
@@ -426,7 +507,8 @@ label {
   line-height: 1.4;
 }
 
-input, textarea {
+input,
+textarea {
   width: 100%;
   border: 1.5px solid var(--input-border);
   border-radius: var(--r-sm);
@@ -442,18 +524,21 @@ input, textarea {
   line-height: 1.5;
 }
 
-input:hover, textarea:hover {
+input:hover,
+textarea:hover {
   border-color: var(--line-strong);
   background: #fff;
 }
 
-input:focus, textarea:focus {
+input:focus,
+textarea:focus {
   border-color: var(--input-border-focus);
   background: #fff;
   box-shadow: 0 0 0 3px var(--brand-ring);
 }
 
-input::placeholder, textarea::placeholder {
+input::placeholder,
+textarea::placeholder {
   color: #B5B2C6;
   font-weight: 400;
   font-style: italic;
@@ -461,11 +546,13 @@ input::placeholder, textarea::placeholder {
   text-transform: none;
 }
 
-textarea { resize: vertical; }
-input[type="date"] { font-family: var(--font-ui); }
+textarea             { resize: vertical; }
+input[type="date"]   { font-family: var(--font-ui); }
 input[type="number"] { font-family: var(--font-mono); font-size: 14px; }
 
-/* ── Buttons ────────────────────────────────────────────────── */
+/* ── 11. Buttons ────────────────────────────────────────────── */
+/* Both button variants share the same base geometry so layout
+   authors don't need to override padding/font per-variant.   */
 .primary-btn,
 .ghost-btn {
   border-radius: var(--r-sm);
@@ -478,6 +565,8 @@ input[type="number"] { font-family: var(--font-mono); font-size: 14px; }
   align-items: center;
   justify-content: center;
   gap: 8px;
+  /* Lift on hover is the shared affordance; each variant then
+     colours its own shadow differently.                       */
   transition: transform .12s var(--ease), box-shadow .14s, opacity .14s;
   letter-spacing: -.01em;
   white-space: nowrap;
@@ -485,21 +574,21 @@ input[type="number"] { font-family: var(--font-mono); font-size: 14px; }
 
 .btn-icon { flex-shrink: 0; }
 
-/* Primary = purple gradient */
+/* Primary — solid dark fill, brand-tinted shadow */
 .primary-btn {
-  background: var(--btn-color);
+  background: var(--btn-fill);
   color: #fff;
   border: none;
-  box-shadow: 0 4px 14px rgba(124, 58, 237, .32);
+  box-shadow: 0 4px 14px var(--brand-ring);
 }
 .primary-btn:hover {
   opacity: .92;
-  box-shadow: 0 6px 20px rgba(124, 58, 237, .42);
+  box-shadow: 0 6px 20px var(--brand-ring);
   transform: translateY(-1px);
 }
-.primary-btn:active { transform: translateY(0); box-shadow: 0 2px 8px rgba(124,58,237,.28); }
+.primary-btn:active { transform: translateY(0); box-shadow: 0 2px 8px var(--brand-ring); }
 
-/* Ghost button */
+/* Ghost — white fill, neutral border */
 .ghost-btn {
   background: #fff;
   color: var(--text);
@@ -512,6 +601,8 @@ input[type="number"] { font-family: var(--font-mono); font-size: 14px; }
 }
 .ghost-btn:active { transform: translateY(0); }
 
+/* Consolidated focus-visible rule — one place to update the
+   brand ring for all interactive elements.                   */
 button:focus-visible,
 .tab-btn:focus-visible,
 .zoom-btn:focus-visible,
@@ -520,10 +611,9 @@ input:focus-visible {
   outline-offset: 2px;
 }
 
-/* ── Services List ──────────────────────────────────────────── */
+/* ── 12. Services List & Item Cards ────────────────────────── */
 .items-list { display: grid; gap: 10px; }
 
-/* ── Item Card ──────────────────────────────────────────────── */
 .item-card {
   position: relative;
   border: 1.5px solid var(--line);
@@ -537,7 +627,8 @@ input:focus-visible {
   box-shadow: var(--shadow-sm);
 }
 
-/* ── Item Card Header ── */
+/* Item card header holds the type badge, collapse toggle, and
+   remove button in a flex row.                               */
 .item-card-header {
   display: flex;
   align-items: center;
@@ -555,7 +646,7 @@ input:focus-visible {
   flex-shrink: 0;
 }
 
-/* ── Collapse toggle button ── */
+/* Collapse toggle — visually a small circular icon button. */
 .item-toggle-btn {
   display: inline-grid;
   place-items: center;
@@ -576,27 +667,21 @@ input:focus-visible {
   color: var(--brand);
 }
 
-.item-chevron {
-  transition: transform .2s var(--ease);
-}
-/* When collapsed, chevron points down */
-.item-card.is-collapsed .item-chevron {
-  transform: rotate(180deg);
-}
+/* Chevron rotates 180° when the card is collapsed so the icon
+   always communicates the action that will happen on click.  */
+.item-chevron { transition: transform .2s var(--ease); }
+.item-card.is-collapsed .item-chevron { transform: rotate(180deg); }
 
-/* ── Item Card Body (collapsible) ── */
+/* Collapsible body — hidden via display:none rather than
+   height:0 so contents remain in the accessibility tree.     */
 .item-card-body {
   padding: 10px 18px 14px;
   overflow: hidden;
-  transition: none;
 }
+.item-card.is-collapsed .item-card-body { display: none; }
 
-/* Collapsed state */
-.item-card.is-collapsed .item-card-body {
-  display: none;
-}
-
-/* ── Collapsed preview line ── */
+/* One-line summary shown while the card body is collapsed so
+   the user can identify the row without expanding it.        */
 .item-collapsed-preview {
   display: none;
   padding: 6px 14px 10px;
@@ -608,20 +693,15 @@ input:focus-visible {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.item-collapsed-preview:hover {
-  color: var(--brand);
-}
-.item-card.is-collapsed .item-collapsed-preview {
-  display: block;
-}
+.item-collapsed-preview:hover { color: var(--brand); }
+.item-card.is-collapsed .item-collapsed-preview { display: block; }
 
-.item-grid {
-  grid-template-columns: 1fr 1fr;
-  align-items: end;
-}
+/* Service / description side by side; details textarea is
+   full-width on the third slot.                              */
+.item-grid { grid-template-columns: 1fr 1fr; align-items: end; }
 .item-grid label:nth-child(3) { grid-column: 1 / -1; }
 
-/* Remove button */
+/* Remove button — red affordance, destructive icon. */
 .remove-item-btn {
   width: 28px;
   height: 28px;
@@ -644,7 +724,9 @@ input:focus-visible {
   transform: translateY(-1px);
 }
 
-/* ── Verification Card ──────────────────────────────────────── */
+/* ── 13. Verification Card ──────────────────────────────────── */
+/* Left accent border signals this is a required sign-off step
+   before the section counts as complete.                     */
 .verification-card {
   border: 1.5px solid var(--line);
   border-left: 3px solid var(--brand);
@@ -676,7 +758,7 @@ input:focus-visible {
   cursor: pointer;
 }
 
-/* ── Preview Panel ──────────────────────────────────────────── */
+/* ── 14. Preview Panel ──────────────────────────────────────── */
 .preview-panel {
   flex: 1.3 1 0;
   min-width: 0;
@@ -696,6 +778,7 @@ input:focus-visible {
   padding-bottom: 14px;
 }
 
+/* "Live" indicator uses a green pulsing dot via ::before. */
 .preview-title .section-kicker {
   color: var(--text);
   display: flex;
@@ -716,10 +799,10 @@ input:focus-visible {
   flex: 0 0 8px;
 }
 
-/* No h2 in preview title — it uses section-kicker only */
+/* Preview title only uses the kicker; the h2 is suppressed. */
 .preview-title h2 { display: none; }
 
-/* Zoom controls */
+/* ── Zoom controls ── */
 .preview-actions {
   display: flex;
   align-items: center;
@@ -743,18 +826,20 @@ input:focus-visible {
 }
 .zoom-btn:hover { background: var(--soft); border-color: var(--line-strong); }
 
+/* Fit button reuses .zoom-btn geometry but adopts the primary
+   button fill to signal it resets to the default view.       */
 .fit-btn {
   padding: 0 14px;
   min-width: auto;
   font-size: 12px;
   letter-spacing: .02em;
   font-weight: 700;
-  background: var(--btn-color);
+  background: var(--btn-fill);
   color: #fff;
   border-color: transparent;
-  box-shadow: 0 2px 8px rgba(124,58,237,.22);
+  box-shadow: 0 2px 8px var(--brand-ring);
 }
-.fit-btn:hover { opacity: .9; background: var(--btn-color); color: #fff; }
+.fit-btn:hover { opacity: .9; background: var(--btn-fill); color: #fff; }
 
 .zoom-level {
   min-width: 40px;
@@ -766,6 +851,9 @@ input:focus-visible {
   letter-spacing: 0;
 }
 
+/* ── Preview scroll container ── */
+/* Gray tinted background lets the white document pages float
+   clearly above the chrome.                                  */
 .preview-scroll {
   flex: 1;
   min-height: 0;
@@ -778,10 +866,14 @@ input:focus-visible {
   scrollbar-width: thin;
   scrollbar-color: var(--line-strong) transparent;
 }
-.preview-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
-.preview-scroll::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 99px; }
+.preview-scroll::-webkit-scrollbar        { width: 6px; height: 6px; }
+.preview-scroll::-webkit-scrollbar-thumb  { background: var(--line-strong); border-radius: 99px; }
 
-/* These two rules control preview scaling — MUST stay exact */
+/* IMPORTANT — These two rules control the preview scaling
+   mechanism used by both previewControls.js and pdfFix.js.
+   The --preview-scale custom property is set via JS.
+   Do NOT modify these dimensions without also updating
+   pdfFix.js, which hard-codes 794px / 2310px to match.      */
 .preview-canvas {
   width: calc(794px * var(--preview-scale, 1));
   min-height: calc(2310px * var(--preview-scale, 1));
@@ -795,28 +887,7 @@ input:focus-visible {
   width: 794px;
 }
 
-/* ── Section Helper ─────────────────────────────────────────── */
-.section-helper {
-  color: var(--muted);
-  font-size: 13px;
-  font-weight: 500;
-  margin: 4px 0 0;
-  line-height: 1.6;
-}
-
-/* ── Load Error ─────────────────────────────────────────────── */
-.load-error {
-  margin: 16px 24px;
-  padding: 14px 18px;
-  border: 1.5px solid var(--text);
-  border-left: 4px solid var(--red);
-  border-radius: var(--r-md);
-  background: #fff;
-  font-weight: 700;
-  font-size: 13.5px;
-}
-
-/* ── Admin Modal ────────────────────────────────────────────── */
+/* ── 15. Admin Modal ────────────────────────────────────────── */
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -843,13 +914,15 @@ input:focus-visible {
   padding: 34px;
   animation: modalIn .22s var(--ease) both;
 }
+
+/* Brand top accent bar — matches the sidebar's active style. */
 .admin-modal::before {
   content: "";
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 3px;
   border-radius: var(--r-xl) var(--r-xl) 0 0;
-  background: var(--btn-color);
+  background: var(--btn-fill);
 }
 
 @keyframes modalIn {
@@ -857,6 +930,9 @@ input:focus-visible {
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* Hidden attribute on admin-modal-view is the toggle mechanism;
+   !important prevents specificity battles with display:block
+   applied elsewhere.                                          */
 .admin-modal-view[hidden] { display: none !important; }
 
 .modal-lock-badge {
@@ -867,7 +943,7 @@ input:focus-visible {
   border-radius: 13px;
   margin-bottom: 14px;
   color: #fff;
-  background: var(--btn-color);
+  background: var(--btn-fill);
   box-shadow: var(--shadow-sm);
 }
 
@@ -891,6 +967,7 @@ input:focus-visible {
 .modal-close-btn:hover {
   background: var(--soft);
   border-color: var(--line-strong);
+  /* Rotation gives a satisfying close affordance. */
   transform: rotate(90deg);
 }
 
@@ -905,11 +982,13 @@ input:focus-visible {
   color: var(--red);
   font-size: 12.5px;
   font-weight: 600;
+  /* Reserve height so the form doesn't jump when an error
+     appears below the password field.                        */
   min-height: 18px;
   margin: 5px 0 0;
 }
 
-/* ── Admin Modal Tabs ───────────────────────────────────────── */
+/* ── Admin Modal Internal Tabs ── */
 .modal-tabs {
   display: inline-flex;
   gap: 4px;
@@ -933,35 +1012,44 @@ input:focus-visible {
   transition: background .14s, color .14s, box-shadow .14s;
 }
 .modal-tab-btn.is-active {
-  background: var(--btn-color);
+  background: var(--btn-fill);
   color: #fff;
-  box-shadow: 0 2px 8px rgba(124, 58, 237, .22);
+  box-shadow: 0 2px 8px var(--brand-ring);
 }
 
-.admin-tab-panel { display: none; }
+.admin-tab-panel         { display: none; }
 .admin-tab-panel.is-active { display: block; }
 
-/* ── PDF export rendering fix ───────────────────────────────── */
+/* ── 16. PDF Export Rendering Fix ──────────────────────────── */
+/* html2canvas captures CSS transforms applied by ancestor
+   elements. During export we set --preview-scale to 1 via JS
+   (pdfFix.js), but we also need to expand any overflow
+   containers that would clip pages. This body class is toggled
+   by pdfFix.js immediately before and after the capture.     */
 body.vrxe-pdf-rendering #previewScroll,
 body.vrxe-pdf-rendering .preview-scroll {
-  overflow: visible !important;
-  height:   auto    !important;
-  max-height: none  !important;
+  overflow:   visible !important;
+  height:     auto    !important;
+  max-height: none    !important;
 }
+
 body.vrxe-pdf-rendering .preview-panel {
   overflow: visible !important;
   height:   auto    !important;
 }
+
+/* Hard pixel values mirror the JS constants in pdfFix.js. */
 body.vrxe-pdf-rendering #previewCanvas {
   width:      794px  !important;
   min-height: 2310px !important;
 }
+
 body.vrxe-pdf-rendering #quotationPreview {
-  transform:        none       !important;
+  transform:        none    !important;
   transform-origin: top left;
 }
 
-/* ── Item Type Badges ───────────────────────────────────────── */
+/* ── 17. Item Type Badges ───────────────────────────────────── */
 .item-type-badge {
   display: inline-flex;
   align-items: center;
@@ -977,50 +1065,56 @@ body.vrxe-pdf-rendering #quotationPreview {
   flex-shrink: 0;
 }
 
-/* Main product — dark */
+/* Main product — dark accent mirrors the document header bar. */
 .item-card[data-type="main"] {
   border-color: var(--line-strong);
-  background: #FAFAFD;
+  background: var(--item-main-bg);
   border-left: 3px solid var(--text);
 }
 .item-card[data-type="main"] .item-type-badge {
-  background: #14131A;
+  background: var(--text);
   color: #fff;
 }
 
-/* Inclusion — green */
+/* Inclusion — green accent matches the "Included" price label. */
 .item-card[data-type="inclusion"] {
-  background: #F5FDF8;
-  border-color: #BBF7D0;
+  background: var(--item-inclusion-bg);
+  border-color: var(--item-inclusion-border);
   border-left: 3px solid var(--green);
 }
-.item-card[data-type="inclusion"]:hover { border-color: #86EFAC; }
+.item-card[data-type="inclusion"]:hover {
+  border-color: var(--item-inclusion-border-hover);
+}
 .item-card[data-type="inclusion"] .item-type-badge {
-  background: #DCFCE7;
+  background: var(--green-light);
   color: #15803D;
-  border: 1px solid #BBF7D0;
+  border: 1px solid var(--item-inclusion-border);
 }
 
-/* Additional — amber */
+/* Additional — amber accent signals optional / paid add-ons. */
 .item-card[data-type="additional"] {
   background: var(--amber-bg);
-  border-color: #FDE68A;
+  border-color: var(--item-additional-border);
   border-left: 3px solid var(--amber);
 }
-.item-card[data-type="additional"]:hover { border-color: #FCD34D; }
+.item-card[data-type="additional"]:hover {
+  border-color: var(--item-additional-border-hover);
+}
 .item-card[data-type="additional"] .item-type-badge {
   background: #FEF3C7;
   color: #92400E;
-  border: 1px solid #FDE68A;
+  border: 1px solid var(--item-additional-border);
 }
 
+/* All three item types share the same internal two-column
+   grid layout.                                               */
 .item-card[data-type="inclusion"] .item-grid,
-.item-card[data-type="main"] .item-grid,
+.item-card[data-type="main"]      .item-grid,
 .item-card[data-type="additional"] .item-grid {
   grid-template-columns: 1fr 1fr;
 }
 
-/* ── Add row buttons ────────────────────────────────────────── */
+/* ── 18. Add-row Buttons ────────────────────────────────────── */
 .add-row-btns {
   display: flex;
   gap: 8px;
@@ -1028,29 +1122,30 @@ body.vrxe-pdf-rendering #quotationPreview {
   align-items: center;
 }
 
+/* Coloured ghost variants hint at which row type will be added. */
 .add-inclusion-btn {
-  border-color: #BBF7D0;
+  border-color: var(--item-inclusion-border);
   color: #15803D;
-  background: #F0FDF4;
+  background: var(--item-inclusion-bg);
 }
 .add-inclusion-btn:hover {
-  border-color: #86EFAC;
-  background: #DCFCE7;
+  border-color: var(--item-inclusion-border-hover);
+  background: var(--green-light);
   color: #15803D;
 }
 
 .add-additional-btn {
-  border-color: #FDE68A;
+  border-color: var(--item-additional-border);
   color: #92400E;
   background: #FFFBEB;
 }
 .add-additional-btn:hover {
-  border-color: #FCD34D;
+  border-color: var(--item-additional-border-hover);
   background: #FEF3C7;
   color: #92400E;
 }
 
-/* ── Payment Terms Token Fields ─────────────────────────────── */
+/* ── 19. Payment Terms Token Fields ─────────────────────────── */
 .payment-tokens-box {
   margin-top: 6px;
   padding: 16px 16px 12px;
@@ -1093,14 +1188,17 @@ body.vrxe-pdf-rendering #quotationPreview {
   font-size: 10.5px;
   font-weight: 700;
   color: #fff;
-  background: var(--btn-color);
+  background: var(--btn-fill);
   padding: 2px 8px;
   border-radius: 5px;
   letter-spacing: .04em;
   width: fit-content;
 }
 
-/* ── Services tab scroll (desktop) ─────────────────────────── */
+/* ── 20. Services Tab — Desktop Scroll ──────────────────────── */
+/* On desktop the services panel uses flex so the items list
+   can scroll independently while the heading and verification
+   card stay pinned at the top.                               */
 @media (min-width: 768px) {
   #tab-services.is-active {
     display: flex;
@@ -1124,14 +1222,31 @@ body.vrxe-pdf-rendering #quotationPreview {
     scrollbar-color: var(--line-strong) transparent;
   }
 
-  #tab-services.is-active #itemsList::-webkit-scrollbar { width: 4px; }
+  #tab-services.is-active #itemsList::-webkit-scrollbar       { width: 4px; }
   #tab-services.is-active #itemsList::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 999px; }
 }
 
-/* ── Reduced motion ─────────────────────────────────────────── */
+/* ── 21. Reduced Motion ─────────────────────────────────────── */
+/* Collapse all animation durations to near-zero for users who
+   have requested reduced motion via OS settings.             */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
-    animation-duration: .001ms !important;
+    animation-duration:  .001ms !important;
     transition-duration: .001ms !important;
   }
+}
+
+/* ── Load Error Banner ──────────────────────────────────────── */
+/* Shown by htmlIncludes.js when partial HTML files cannot be
+   fetched (most commonly because the app is opened via
+   file:// instead of a local server).                        */
+.load-error {
+  margin: 16px 24px;
+  padding: 14px 18px;
+  border: 1.5px solid var(--text);
+  border-left: 4px solid var(--red);
+  border-radius: var(--r-md);
+  background: #fff;
+  font-weight: 700;
+  font-size: 13.5px;
 }
