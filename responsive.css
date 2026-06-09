@@ -251,7 +251,7 @@
   }
   .tab-panel {
     background: #fff; border: 0; border-radius: 0;
-    padding: 16px 16px 0; box-shadow: none; min-height: 100%;
+    padding: 20px 20px 24px; box-shadow: none; min-height: 100%;
   }
 
   #tab-services.is-active {
