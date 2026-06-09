@@ -92,13 +92,13 @@
   /* body becomes the flex column that fills the screen */
   body {
     height: 100%;
-    height: 100dvh;
+    height: 100svh;           /* svh = small viewport height — excludes the safe area on iOS PWA */
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    /* No bottom padding here — the footer carries the safe-area inset
-       so its background colour extends all the way to the home indicator */
     box-sizing: border-box;
+    background: #fff;         /* fills the safe-area zone with white instead of void */
+    padding-bottom: env(safe-area-inset-bottom);  /* shrinks the flex space so footer sits above the bar */
   }
 
   /* Header: fixed height, never grows */
@@ -304,7 +304,7 @@
     width: 100%;
     border-radius: 0; border: 0;
     border-top: 1px solid var(--line);
-    padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+    padding: 10px 14px 10px;
     background: #fff;
     box-shadow: 0 -2px 10px rgba(18,15,38,.06);
     display: flex;
@@ -372,7 +372,7 @@
   .mobile-primary-tab-bar { padding: 7px 12px; gap: 6px; }
   .mptb-btn { font-size: 12.5px; padding: 9px 10px; gap: 5px; }
   .tab-panel { padding: 14px 12px 0; }
-  .tab-footer { padding: 9px 12px calc(9px + env(safe-area-inset-bottom)); }
+  .tab-footer { padding: 9px 12px 9px; }
   h2 { font-size: 18px; }
   label { font-size: 11px; margin-bottom: 10px; }
   input:not([type="date"]):not([type="time"]), textarea { font-size: 16px; padding: 10px 12px; }
@@ -404,7 +404,7 @@
   .mobile-primary-tab-bar { padding: 5px 12px; gap: 7px; }
   .mptb-btn { font-size: 12px; padding: 7px 10px; }
   .tab-panel { padding: 12px 16px 0; }
-  .tab-footer { padding: 7px 16px calc(9px + env(safe-area-inset-bottom)); }
+  .tab-footer { padding: 7px 16px 9px; }
   h2 { font-size: 17px; }
   .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
