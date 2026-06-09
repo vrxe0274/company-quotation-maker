@@ -68,13 +68,7 @@
      every usage site.                                         */
   --brand-ring: rgba(124, 58, 237, .15);
 
-  /* ── Button fill ──
-     Named --btn-fill to accurately describe its role
-     (background colour, not foreground text colour).
-     REVIEW: was --btn-color in the original; the name was
-     misleading. All existing var(--btn-color) references in
-     this file have been updated to var(--btn-fill). Verify
-     any external CSS that may still use --btn-color.          */
+  /* ── Button fill ── */
   --btn-fill: #000000;
 
   /* ── Active tab uses the same fill as buttons ── */
@@ -1045,7 +1039,7 @@ body.vrxe-pdf-rendering #quotationPreview {
   align-items: center;
   gap: 5px;
   padding: 3px 10px 3px 8px;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   font-size: 10px;
   font-weight: 800;
   letter-spacing: .06em;
@@ -1180,7 +1174,7 @@ body.vrxe-pdf-rendering #quotationPreview {
   color: #fff;
   background: var(--btn-fill);
   padding: 2px 8px;
-  border-radius: 5px;
+  border-radius: var(--r-xs);
   letter-spacing: .04em;
   width: fit-content;
 }
@@ -1213,7 +1207,7 @@ body.vrxe-pdf-rendering #quotationPreview {
   }
 
   #tab-services.is-active #itemsList::-webkit-scrollbar       { width: 4px; }
-  #tab-services.is-active #itemsList::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 999px; }
+  #tab-services.is-active #itemsList::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 99px; }
 }
 
 /* ── 21. Reduced Motion ─────────────────────────────────────── */
