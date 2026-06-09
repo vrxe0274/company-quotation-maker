@@ -1,10 +1,8 @@
 /* ============================================================
    VRXE Quotation Maker — Responsive CSS
-   Layout: sidebar | form | preview (flex row on desktop)
-
    ≤ 1200px  Compact desktop
-   ≤ 900px   Tablet — sidebar becomes top strip
-   ≤ 767px   Mobile — sidebar hidden → dropdown; Forms/Preview toggle
+   ≤ 900px   Tablet
+   ≤ 767px   Mobile
    ≤ 480px   Small mobile
    ============================================================ */
 
@@ -31,7 +29,6 @@
     overflow: visible;
   }
 
-  /* Sidebar → horizontal strip */
   .tabs {
     flex: 0 0 auto;
     width: 100%;
@@ -52,42 +49,20 @@
   .tab-group-label,
   .tab-divider { display: none; }
 
-  .tab-btn {
-    flex: 0 0 auto;
-    padding: 8px 14px;
-    gap: 8px;
-    white-space: nowrap;
-  }
+  .tab-btn { flex: 0 0 auto; padding: 8px 14px; gap: 8px; white-space: nowrap; }
   .tab-number { width: 22px; height: 22px; flex-basis: 22px; font-size: 10px; }
   #openAdminSettingsBtn.admin-tab { padding: 8px 14px; }
   #openAdminSettingsBtn.admin-tab .tab-text { flex-direction: row; gap: 5px; align-items: center; }
   #openAdminSettingsBtn.admin-tab .tab-text small { display: none; }
 
-  /* Form: full width */
-  .form-content {
-    flex: 0 0 auto;
-    width: 100%;
-    height: auto;
-    overflow: visible;
-  }
+  .form-content { flex: 0 0 auto; width: 100%; height: auto; overflow: visible; }
 
-  .tab-panels {
-    flex: none;
-    overflow-y: visible;
-    padding: 22px 20px 14px;
-    min-height: 400px;
-  }
-
+  .tab-panels { flex: none; overflow-y: visible; padding: 22px 20px 14px; min-height: 400px; }
   .tab-footer { padding: 12px 20px 16px; }
 
-  /* Preview: full width static */
   .preview-panel {
-    flex: 0 0 auto;
-    width: 100%;
-    height: 560px;
-    border-left: none;
-    border-top: 1px solid var(--line);
-    padding: 16px 14px 0;
+    flex: 0 0 auto; width: 100%; height: 560px;
+    border-left: none; border-top: 1px solid var(--line); padding: 16px 14px 0;
   }
   .preview-scroll { height: calc(560px - 60px); }
 
@@ -97,29 +72,38 @@
 
 /* ══════════════════════════════════════════════════════════════
    3. MOBILE ≤ 767px
+
+   DOM order injected by JS (all siblings inside <body>):
+     .app-header
+     #mobilePrimaryTabBar        ← injected by mobileTabUI.js
+     .app-layout
+       .form-content             ← contains nav-dropdown + tab-panels + tab-footer
+       .preview-panel
+
+   Strategy: make <body> a flex-column so all three children
+   stack and fill 100dvh without any calc() on pixel heights.
+   app-layout gets flex:1 so it fills whatever is left after
+   the header and tab-bar.
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 767px) {
 
   html { overflow: hidden; height: 100%; }
-  body { height: 100%; overflow: hidden; }
 
-  /* ── Heights: header + mobile-tab-bar + footer ──────────────
-     Header:        54px + safe-area-inset-top
-     Mobile tab bar: 58px  (the Forms | Preview switcher)
-     Tab footer:     58px + safe-area-inset-bottom
-     ---------------------------------------------------------- */
-  :root {
-    --header-h: calc(54px + env(safe-area-inset-top));
-    --mtb-h: 58px;   /* mobile-primary-tab-bar */
-    --footer-h: calc(58px + env(safe-area-inset-bottom));
-    --chrome-h: calc(var(--header-h) + var(--mtb-h) + var(--footer-h));
+  /* body becomes the flex column that fills the screen */
+  body {
+    height: 100%;
+    height: 100dvh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
-  /* Header */
+  /* Header: fixed height, never grows */
   .app-header {
+    flex: 0 0 auto;
     padding: 0 14px;
     padding-top: env(safe-area-inset-top);
-    height: var(--header-h);
+    height: calc(54px + env(safe-area-inset-top));
     gap: 10px;
   }
   .brand-logo-frame { width: 34px; height: 34px; border-radius: 9px; }
@@ -127,13 +111,15 @@
   h1 { font-size: 15px; }
   #downloadPdfBtn { display: none; }
 
-  /* Mobile primary tab bar (Forms | Preview) */
+  /* Mobile tab bar (Forms | Preview): fixed height, never grows */
   .mobile-primary-tab-bar {
+    flex: 0 0 auto;
     display: flex;
-    position: sticky;
-    top: var(--header-h);
+    /* Override the sticky positioning from mobileTabUI so it
+       participates in the body flex flow instead */
+    position: relative !important;
+    top: auto !important;
     z-index: 90;
-    height: var(--mtb-h);
     background: rgba(255,255,255,.97);
     border-bottom: 1px solid var(--line);
     backdrop-filter: blur(10px);
@@ -169,23 +155,20 @@
   }
   .mptb-btn svg { flex-shrink: 0; }
 
-  /* Main layout — fills exactly the space between tab-bar and footer */
+  /* app-layout: absorbs all remaining height — overrides styles.css calc */
   .app-layout {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: auto !important;          /* cancel the calc(100vh - 62px) */
     display: block;
-    flex-direction: unset;
-    padding: 0;
-    gap: 0;
-    height: calc(100vh - var(--chrome-h));
-    height: calc(100dvh - var(--chrome-h));
     overflow: hidden;
   }
 
-  /* Sidebar hidden — replaced by nav dropdown */
+  /* Sidebar hidden */
   .tabs { display: none !important; }
 
-  /* Form content */
+  /* form-content: full flex column inside app-layout */
   .form-content {
-    flex: unset;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -196,7 +179,7 @@
     min-width: 0;
   }
 
-  /* ── Nav dropdown (navMenu.js) ── */
+  /* Nav dropdown */
   .nav-dropdown {
     display: block;
     position: relative;
@@ -206,44 +189,26 @@
     padding: 10px 12px;
     z-index: 80;
   }
-
   .nav-dd-trigger {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-    padding: 10px 13px;
-    border: 1.5px solid var(--input-border);
-    border-radius: var(--r-md);
-    background: var(--soft);
-    color: var(--text);
-    font: inherit;
-    cursor: pointer;
-    text-align: left;
+    display: flex; align-items: center; gap: 12px; width: 100%;
+    padding: 10px 13px; border: 1.5px solid var(--input-border);
+    border-radius: var(--r-md); background: var(--soft); color: var(--text);
+    font: inherit; cursor: pointer; text-align: left;
     transition: border-color .14s, background .14s, box-shadow .14s;
   }
-
   .nav-dropdown.is-open .nav-dd-trigger {
-    border-color: var(--brand);
-    background: #fff;
-    box-shadow: 0 0 0 3px var(--brand-ring);
+    border-color: var(--brand); background: #fff; box-shadow: 0 0 0 3px var(--brand-ring);
   }
-
   .nav-dd-badge {
-    flex: 0 0 28px; width: 28px; height: 28px;
-    display: inline-grid; place-items: center;
-    border-radius: 50%;
-    background: black; color: #fff;
-    font-size: 12px; font-weight: 700; font-family: var(--font-mono);
-    letter-spacing: 0;
+    flex: 0 0 28px; width: 28px; height: 28px; display: inline-grid; place-items: center;
+    border-radius: 50%; background: black; color: #fff;
+    font-size: 12px; font-weight: 700; font-family: var(--font-mono); letter-spacing: 0;
   }
-
   .nav-dd-titles { display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1; }
   .nav-dd-kicker { font-size: 9px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
   .nav-dd-label { font-size: 14px; font-weight: 700; letter-spacing: -.01em; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .nav-dd-caret { flex: 0 0 auto; color: var(--muted); transition: transform .18s var(--ease); }
   .nav-dropdown.is-open .nav-dd-caret { transform: rotate(180deg); }
-
   .nav-dd-menu {
     position: absolute; top: calc(100% - 4px); left: 12px; right: 12px; z-index: 95;
     background: #fff; border: 1px solid var(--line); border-radius: var(--r-md);
@@ -252,100 +217,70 @@
     transition: opacity .16s var(--ease), transform .16s var(--ease);
   }
   .nav-dropdown.is-open .nav-dd-menu { opacity: 1; transform: translateY(0); pointer-events: auto; }
-
   .nav-dd-item {
-    display: flex; align-items: center; gap: 10px;
-    width: 100%; padding: 10px 12px;
-    border: 0; border-radius: var(--r-sm);
-    background: transparent; color: var(--text-2);
-    font: inherit; font-size: 14px; font-weight: 600;
-    cursor: pointer; text-align: left; transition: background .12s;
+    display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px;
+    border: 0; border-radius: var(--r-sm); background: transparent; color: var(--text-2);
+    font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; text-align: left; transition: background .12s;
   }
   .nav-dd-item:hover, .nav-dd-item:active { background: var(--soft); }
   .nav-dd-item.is-active { background: var(--brand-soft); color: var(--text); }
-
   .nav-dd-item-num {
-    flex: 0 0 24px; width: 24px; height: 24px;
-    display: inline-grid; place-items: center; border-radius: 50%;
-    border: 1.5px solid var(--line-strong);
+    flex: 0 0 24px; width: 24px; height: 24px; display: inline-grid; place-items: center;
+    border-radius: 50%; border: 1.5px solid var(--line-strong);
     background: #fff; color: var(--text-2); font-size: 10px; font-weight: 700;
     font-family: var(--font-mono); letter-spacing: 0;
   }
-  .nav-dd-item.is-active .nav-dd-item-num {
-    background: black;
-    border-color: transparent;
-    color: #fff;
-  }
+  .nav-dd-item.is-active .nav-dd-item-num { background: black; border-color: transparent; color: #fff; }
   .nav-dd-item-num-admin { background: var(--green-bg); border-color: var(--green); color: var(--green); }
   .nav-dd-item-text { flex: 1; min-width: 0; }
   .nav-dd-check { flex: 0 0 auto; color: var(--brand); opacity: 0; transition: opacity .12s; }
   .nav-dd-item.is-active .nav-dd-check { opacity: 1; }
   .nav-dd-sep { height: 1px; margin: 6px 8px; background: var(--line); }
 
-  /* ── Tab panels ── */
+  /* Tab panels: grow to fill space between nav-dropdown and footer */
   .tab-panels {
-    flex: 1; min-height: 0; overflow-y: auto;
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
     border: 0; border-radius: 0; padding: 0;
     box-shadow: none; background: var(--bg);
     scrollbar-width: thin;
   }
-
   .tab-panel {
     background: #fff; border: 0; border-radius: 0;
-    padding: 16px 16px 0;
-    box-shadow: none; min-height: 100%;
+    padding: 16px 16px 0; box-shadow: none; min-height: 100%;
   }
 
   #tab-services.is-active {
-    max-height: none;
-    display: flex;
-    flex-direction: column;
-    min-height: 100%;
-    padding-bottom: 0;
+    max-height: none; display: flex; flex-direction: column; min-height: 100%; padding-bottom: 0;
   }
   #tab-services.is-active #itemsList {
-    flex: 1 1 auto;
-    overflow-y: auto;
-    max-height: none;
-    padding-bottom: 16px;
+    flex: 1 1 auto; overflow-y: auto; max-height: none; padding-bottom: 16px;
   }
 
   .section-title { margin-bottom: 16px; }
   h2 { font-size: 20px; }
   .section-kicker { font-size: 9.5px; }
 
-  /* Single-column grid */
-  .grid.two {
-    grid-template-columns: 1fr;
-  }
+  .grid.two { grid-template-columns: 1fr; }
 
-  /* Date input: force it to stay within its container on iOS */
+  /* Date input: prevent iOS native picker from overflowing */
   input[type="date"] {
     font-size: 14px;
     width: 100%;
     min-width: 0;
     max-width: 100%;
     box-sizing: border-box;
-    /* iOS renders a native spinner — clip it to the label's width */
     display: block;
   }
-
-  /* Prevent the label itself from overflowing */
-  label {
-    min-width: 0;
-    max-width: 100%;
-    overflow: hidden;
-  }
-
-  /* Mobile input sizing — 16px prevents iOS zoom */
+  label { min-width: 0; max-width: 100%; overflow: hidden; }
   input:not([type="date"]), textarea { font-size: 16px; }
 
-  /* Footer — flush to the bottom, uses safe-area for notched phones */
+  /* Footer: flex child, sits flush at bottom, no calc needed */
   .tab-footer {
     flex: 0 0 auto;
     width: 100%;
-    border-radius: 0;
-    border: 0;
+    border-radius: 0; border: 0;
     border-top: 1px solid var(--line);
     padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
     background: #fff;
@@ -354,8 +289,6 @@
     justify-content: space-between;
     gap: 10px;
     box-sizing: border-box;
-    /* Ensure total height matches --footer-h (58px + safe-area) */
-    min-height: var(--footer-h);
   }
   .tab-footer .primary-btn, .tab-footer .ghost-btn {
     flex: 1; padding: 12px 14px; font-size: 13.5px;
@@ -366,24 +299,15 @@
     flex: unset;
     position: static;
     width: 100%; max-width: 100%; min-width: 0;
-    height: calc(100vh - var(--chrome-h));
-    height: calc(100dvh - var(--chrome-h));
-    border-left: none;
-    border-top: none;
-    border-radius: 0;
+    height: 100%;
+    border-left: none; border-top: none; border-radius: 0;
     padding: 10px 12px 0;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    display: flex; flex-direction: column;
     background: var(--bg);
   }
-  .preview-scroll {
-    flex: 1;
-    border-radius: var(--r-lg) var(--r-lg) 0 0;
-    margin-bottom: 0;
-  }
+  .preview-scroll { flex: 1; min-height: 0; border-radius: var(--r-lg) var(--r-lg) 0 0; margin-bottom: 0; }
 
-  /* Mobile download button */
   .mobile-preview-download-btn {
     display: flex; align-items: center; justify-content: center;
     gap: 8px; width: 100%; margin-bottom: 10px;
@@ -394,11 +318,9 @@
     transition: transform .12s, box-shadow .12s; flex-shrink: 0;
   }
   .mobile-preview-download-btn:active {
-    transform: scale(.98);
-    box-shadow: 0 2px 8px rgba(124,58,237,.18);
+    transform: scale(.98); box-shadow: 0 2px 8px rgba(124,58,237,.18);
   }
 
-  /* Item cards */
   .item-card { padding: 0; }
   .item-card-header { padding: 10px 12px 0; }
   .item-card-body { padding: 8px 14px 12px; }
@@ -408,13 +330,11 @@
   .add-row-btns { gap: 6px; flex-wrap: wrap; }
   .add-row-btns .ghost-btn { font-size: 12.5px; padding: 8px 12px; }
 
-  /* Admin modal */
   .admin-modal { padding: 22px 16px; max-height: 92vh; }
   .modal-tabs { overflow-x: auto; scrollbar-width: none; }
   .admin-modal .grid.two { grid-template-columns: 1fr; }
   .payment-tokens-box .grid.two { grid-template-columns: 1fr; }
 
-  /* Zoom controls */
   .zoom-btn { min-width: 28px; height: 28px; font-size: 14px; }
   .zoom-level { font-size: 11px; min-width: 36px; }
 }
@@ -423,38 +343,14 @@
    4. SMALL MOBILE ≤ 480px
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 480px) {
-  :root {
-    --header-h: calc(50px + env(safe-area-inset-top));
-    --mtb-h: 56px;
-    --footer-h: calc(56px + env(safe-area-inset-bottom));
-    --chrome-h: calc(var(--header-h) + var(--mtb-h) + var(--footer-h));
-  }
-
-  .app-header { padding: 0 12px; padding-top: env(safe-area-inset-top); height: var(--header-h); }
+  .app-header { padding: 0 12px; padding-top: env(safe-area-inset-top); height: calc(50px + env(safe-area-inset-top)); }
   .brand-logo-frame { width: 30px; height: 30px; }
   h1 { font-size: 14px; }
   .eyebrow { display: none; }
-  .mobile-primary-tab-bar {
-    top: var(--header-h);
-    padding: 7px 12px;
-    gap: 6px;
-    height: var(--mtb-h);
-  }
+  .mobile-primary-tab-bar { padding: 7px 12px; gap: 6px; }
   .mptb-btn { font-size: 12.5px; padding: 9px 10px; gap: 5px; }
-  .app-layout {
-    height: calc(100vh - var(--chrome-h));
-    height: calc(100dvh - var(--chrome-h));
-  }
-  .preview-panel {
-    height: calc(100vh - var(--chrome-h));
-    height: calc(100dvh - var(--chrome-h));
-    padding: 8px 10px 0;
-  }
   .tab-panel { padding: 14px 12px 0; }
-  .tab-footer {
-    padding: 9px 12px calc(9px + env(safe-area-inset-bottom));
-    min-height: var(--footer-h);
-  }
+  .tab-footer { padding: 9px 12px calc(9px + env(safe-area-inset-bottom)); }
   h2 { font-size: 18px; }
   label { font-size: 11px; margin-bottom: 10px; }
   input:not([type="date"]), textarea { font-size: 16px; padding: 10px 12px; }
@@ -478,37 +374,14 @@
    6. LANDSCAPE MOBILE
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 767px) and (orientation: landscape) {
-  :root {
-    --header-h: calc(46px + env(safe-area-inset-top));
-    --mtb-h: 50px;
-    --footer-h: calc(50px + env(safe-area-inset-bottom));
-    --chrome-h: calc(var(--header-h) + var(--mtb-h) + var(--footer-h));
-  }
-
-  .app-header { height: var(--header-h); padding-top: env(safe-area-inset-top); }
+  .app-header { padding-top: env(safe-area-inset-top); height: calc(46px + env(safe-area-inset-top)); }
   .brand-logo-frame { width: 28px; height: 28px; }
   h1 { font-size: 13px; }
   .eyebrow { display: none; }
-  .mobile-primary-tab-bar {
-    top: var(--header-h);
-    padding: 5px 12px;
-    gap: 7px;
-    height: var(--mtb-h);
-  }
+  .mobile-primary-tab-bar { padding: 5px 12px; gap: 7px; }
   .mptb-btn { font-size: 12px; padding: 7px 10px; }
-  .app-layout {
-    height: calc(100vh - var(--chrome-h));
-    height: calc(100dvh - var(--chrome-h));
-  }
-  .preview-panel {
-    height: calc(100vh - var(--chrome-h));
-    height: calc(100dvh - var(--chrome-h));
-  }
   .tab-panel { padding: 12px 16px 0; }
-  .tab-footer {
-    padding: 7px 16px calc(7px + env(safe-area-inset-bottom));
-    min-height: var(--footer-h);
-  }
+  .tab-footer { padding: 7px 16px calc(9px + env(safe-area-inset-bottom)); }
   h2 { font-size: 17px; }
   .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
