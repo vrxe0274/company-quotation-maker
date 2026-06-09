@@ -258,12 +258,12 @@
 }
 
 .tab-panel {
-  background: #fff;
+  flex: 1;
   border: 0;
   border-radius: 0;
   padding: 16px 16px 0;
   box-shadow: none;
-  min-height: unset; /* <-- was 100%, which was causing the gap */
+  min-height: 0; /* <-- was 100%, which was causing the gap */
 }
 
   #tab-services.is-active {
