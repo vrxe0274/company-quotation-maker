@@ -192,7 +192,7 @@
     min-height: 0;
   }
 
-  .items-list { padding-bottom: 50px; }
+  .items-list { padding-bottom: 20px; }
 
   /* ── Step nav dropdown ───────────────────────────────────── */
   .nav-dropdown {
