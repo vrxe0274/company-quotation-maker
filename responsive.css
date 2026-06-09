@@ -99,6 +99,7 @@
     box-sizing: border-box;
     background: #fff;         /* fills the safe-area zone with white instead of void */
     padding-bottom: env(safe-area-inset-bottom);  /* shrinks the flex space so footer sits above the bar */
+    touch-action: pan-y;
   }
 
   /* Header: fixed height, never grows */
