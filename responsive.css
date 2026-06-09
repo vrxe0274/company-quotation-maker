@@ -104,13 +104,8 @@
   body { height: 100%; overflow: hidden; }
 
   /* Header — sits flush at top, no extra top spacing */
-  .app-header {
-    padding: 0 14px;
-    height: 54px;
-    position: sticky;
-    top: 0;
-    margin-top: 0;
-  }
+/* Header */
+  .app-header { padding: 0 14px; height: 54px; gap: 10px; padding-top: env(safe-area-inset-top); height: calc(54px + env(safe-area-inset-top)); }
   .brand-logo-frame { width: 34px; height: 34px; border-radius: 9px; }
   .eyebrow { font-size: 8px; }
   h1 { font-size: 15px; }
@@ -120,7 +115,7 @@
   .mobile-primary-tab-bar {
     display: flex;
     position: sticky;
-    top: 54px;
+    top: calc(54px + env(safe-area-inset-top));
     z-index: 90;
     background: rgba(255,255,255,.97);
     border-bottom: 1px solid var(--line);
@@ -162,9 +157,8 @@
     flex-direction: unset;
     padding: 0;
     gap: 0;
-    /* Account for header (54px) + tab bar (~58px) */
-    height: calc(100vh - 54px - 58px);
-    height: calc(100dvh - 54px - 58px);
+    height: calc(100vh - 54px - env(safe-area-inset-top) - 58px - env(safe-area-inset-bottom));
+    height: calc(100dvh - 54px - env(safe-area-inset-top) - 58px - env(safe-area-inset-bottom));
     overflow: hidden;
   }
 
@@ -322,8 +316,7 @@
   .tab-footer {
     flex: 0 0 auto; width: 100%;
     border-radius: 0; border: 0; border-top: 1px solid var(--line);
-    padding: 10px 14px env(safe-area-inset-bottom, 10px);
-    background: #fff;
+    padding: 10px 14px calc(14px + env(safe-area-inset-bottom)); background: #fff;
     box-shadow: 0 -2px 10px rgba(18,15,38,.06);
     display: flex; justify-content: space-between; gap: 10px;
   }
@@ -336,8 +329,8 @@
     flex: unset;
     position: static;
     width: 100%; max-width: 100%; min-width: 0;
-    height: calc(100vh - 54px - 58px);
-    height: calc(100dvh - 54px - 58px);
+    height: calc(100vh - 54px - env(safe-area-inset-top) - 58px - env(safe-area-inset-bottom));
+    height: calc(100dvh - 54px - env(safe-area-inset-top) - 58px - env(safe-area-inset-bottom));
     border-left: none;
     border-top: none;
     border-radius: 0;
@@ -394,16 +387,16 @@
    4. SMALL MOBILE ≤ 480px
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 480px) {
-  .app-header { padding: 0 12px; height: 50px; margin-top: 0; }
+  .app-header { padding: 0 12px; height: 50px; padding-top: env(safe-area-inset-top); height: calc(50px + env(safe-area-inset-top)); }
   .brand-logo-frame { width: 30px; height: 30px; }
   h1 { font-size: 14px; }
   .eyebrow { display: none; }
-  .mobile-primary-tab-bar { top: 50px; padding: 7px 12px; gap: 6px; }
+  .mobile-primary-tab-bar { top: calc(50px + env(safe-area-inset-top)); padding: 7px 12px; gap: 6px; }
   .mptb-btn { font-size: 12.5px; padding: 9px 10px; gap: 5px; }
-  .app-layout { height: calc(100vh - 50px - 56px); height: calc(100dvh - 50px - 56px); }
-  .preview-panel { height: calc(100vh - 50px - 56px); height: calc(100dvh - 50px - 56px); padding: 8px 10px 0; }
+  .app-layout { height: calc(100vh - 50px - env(safe-area-inset-top) - 56px - env(safe-area-inset-bottom)); height: calc(100dvh - 50px - env(safe-area-inset-top) - 56px - env(safe-area-inset-bottom)); }
+  .preview-panel { height: calc(100vh - 50px - env(safe-area-inset-top) - 56px - env(safe-area-inset-bottom)); height: calc(100dvh - 50px - env(safe-area-inset-top) - 56px - env(safe-area-inset-bottom)); padding: 8px 10px 0; }
   .tab-panel { padding: 14px 12px 0; }
-  .tab-footer { padding: 9px 12px env(safe-area-inset-bottom, 9px); }
+  .tab-footer { padding: 9px 12px calc(12px + env(safe-area-inset-bottom)); }
   h2 { font-size: 18px; }
   label { font-size: 11px; margin-bottom: 10px; }
   input:not([type="date"]), textarea { font-size: 16px; padding: 10px 12px; }
@@ -427,16 +420,16 @@
    6. LANDSCAPE MOBILE
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 767px) and (orientation: landscape) {
-  .app-header { height: 46px; margin-top: 0; }
+  .app-header { height: 46px; padding-top: env(safe-area-inset-top); height: calc(46px + env(safe-area-inset-top)); }
   .brand-logo-frame { width: 28px; height: 28px; }
   h1 { font-size: 13px; }
   .eyebrow { display: none; }
-  .mobile-primary-tab-bar { top: 46px; padding: 5px 12px; gap: 7px; }
+  .mobile-primary-tab-bar { top: calc(46px + env(safe-area-inset-top)); padding: 5px 12px; gap: 7px; }
   .mptb-btn { font-size: 12px; padding: 7px 10px; }
-  .app-layout { height: calc(100vh - 46px - 50px); height: calc(100dvh - 46px - 50px); }
-  .preview-panel { height: calc(100vh - 46px - 50px); height: calc(100dvh - 46px - 50px); }
+  .app-layout { height: calc(100vh - 46px - env(safe-area-inset-top) - 50px - env(safe-area-inset-bottom)); height: calc(100dvh - 46px - env(safe-area-inset-top) - 50px - env(safe-area-inset-bottom)); }
+  .preview-panel { height: calc(100vh - 46px - env(safe-area-inset-top) - 50px - env(safe-area-inset-bottom)); height: calc(100dvh - 46px - env(safe-area-inset-top) - 50px - env(safe-area-inset-bottom)); }
   .tab-panel { padding: 12px 16px 0; }
-  .tab-footer { padding: 7px 16px env(safe-area-inset-bottom, 7px); }
+  .tab-footer { padding: 7px 16px calc(9px + env(safe-area-inset-bottom)); }
   h2 { font-size: 17px; }
   .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
