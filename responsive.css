@@ -192,6 +192,8 @@
     min-height: 0;
   }
 
+  .items-list { padding-bottom: 50px; }
+
   /* ── Step nav dropdown ───────────────────────────────────── */
   .nav-dropdown {
     display: block;
