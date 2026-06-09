@@ -243,7 +243,7 @@
   /* Tab panels: grow to fill space between nav-dropdown and footer */
   .tab-panels {
     flex: 1 1 0;
-    min-height: 60vh;
+    min-height: 0;
     overflow-y: auto;
     border: 0; border-radius: 0; padding: 0;
     box-shadow: none; background: var(--bg);
