@@ -433,3 +433,38 @@
   h2 { font-size: 17px; }
   .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   7. PWA STANDALONE — fill remaining bottom space
+   In standalone mode the browser chrome is absent, so
+   safe-area-inset-bottom is sufficient and we no longer need to
+   subtract a bottom chrome offset. Removing that extra deduction
+   lets the layout stretch to fill the gap visible in the
+   screenshot below the tab footer.
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) and (display-mode: standalone) {
+  .app-layout {
+    height: calc(100dvh - 54px - env(safe-area-inset-top) - 58px);
+  }
+  .preview-panel {
+    height: calc(100dvh - 54px - env(safe-area-inset-top) - 58px);
+  }
+}
+
+@media (max-width: 480px) and (display-mode: standalone) {
+  .app-layout {
+    height: calc(100dvh - 50px - env(safe-area-inset-top) - 56px);
+  }
+  .preview-panel {
+    height: calc(100dvh - 50px - env(safe-area-inset-top) - 56px);
+  }
+}
+
+@media (max-width: 767px) and (orientation: landscape) and (display-mode: standalone) {
+  .app-layout {
+    height: calc(100dvh - 46px - env(safe-area-inset-top) - 50px);
+  }
+  .preview-panel {
+    height: calc(100dvh - 46px - env(safe-area-inset-top) - 50px);
+  }
+}
