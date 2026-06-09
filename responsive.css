@@ -108,7 +108,7 @@
   .app-header { padding: 0 14px; height: 54px; gap: 10px; padding-top: env(safe-area-inset-top); height: calc(54px + env(safe-area-inset-top)); }
   .brand-logo-frame { width: 34px; height: 34px; border-radius: 9px; }
   .eyebrow { font-size: 8px; }
-  h1 { font-size: 15px; }
+  h1 { font-size: 15px; white-space: nowrap;}
   #downloadPdfBtn { display: none; }
 
   /* Mobile primary tab bar (Forms | Preview) */
@@ -389,7 +389,7 @@
 @media (max-width: 480px) {
   .app-header { padding: 0 12px; height: 50px; padding-top: env(safe-area-inset-top); height: calc(50px + env(safe-area-inset-top)); }
   .brand-logo-frame { width: 30px; height: 30px; }
-  h1 { font-size: 14px; }
+  h1 { font-size: 14px; white-space: nowrap;}
   .eyebrow { display: none; }
   .mobile-primary-tab-bar { top: calc(50px + env(safe-area-inset-top)); padding: 7px 12px; gap: 6px; }
   .mptb-btn { font-size: 12.5px; padding: 9px 10px; gap: 5px; }
@@ -422,7 +422,7 @@
 @media (max-width: 767px) and (orientation: landscape) {
   .app-header { height: 46px; padding-top: env(safe-area-inset-top); height: calc(46px + env(safe-area-inset-top)); }
   .brand-logo-frame { width: 28px; height: 28px; }
-  h1 { font-size: 13px; }
+  h1 { font-size: 13px; white-space: nowrap;}
   .eyebrow { display: none; }
   .mobile-primary-tab-bar { top: calc(46px + env(safe-area-inset-top)); padding: 5px 12px; gap: 7px; }
   .mptb-btn { font-size: 12px; padding: 7px 10px; }
