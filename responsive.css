@@ -103,9 +103,25 @@
   html { overflow: hidden; height: 100%; }
   body { height: 100%; overflow: hidden; }
 
-  /* Header — sits flush at top, no extra top spacing */
-/* Header */
-  .app-header { padding: 0 14px; height: 54px; gap: 10px; padding-top: env(safe-area-inset-top); height: calc(54px + env(safe-area-inset-top)); }
+  /* ── Heights: header + mobile-tab-bar + footer ──────────────
+     Header:        54px + safe-area-inset-top
+     Mobile tab bar: 58px  (the Forms | Preview switcher)
+     Tab footer:     58px + safe-area-inset-bottom
+     ---------------------------------------------------------- */
+  :root {
+    --header-h: calc(54px + env(safe-area-inset-top));
+    --mtb-h: 58px;   /* mobile-primary-tab-bar */
+    --footer-h: calc(58px + env(safe-area-inset-bottom));
+    --chrome-h: calc(var(--header-h) + var(--mtb-h) + var(--footer-h));
+  }
+
+  /* Header */
+  .app-header {
+    padding: 0 14px;
+    padding-top: env(safe-area-inset-top);
+    height: var(--header-h);
+    gap: 10px;
+  }
   .brand-logo-frame { width: 34px; height: 34px; border-radius: 9px; }
   .eyebrow { font-size: 8px; }
   h1 { font-size: 15px; }
@@ -115,8 +131,9 @@
   .mobile-primary-tab-bar {
     display: flex;
     position: sticky;
-    top: calc(54px + env(safe-area-inset-top));
+    top: var(--header-h);
     z-index: 90;
+    height: var(--mtb-h);
     background: rgba(255,255,255,.97);
     border-bottom: 1px solid var(--line);
     backdrop-filter: blur(10px);
@@ -124,6 +141,7 @@
     padding: 8px 12px;
     gap: 8px;
     box-shadow: 0 2px 8px rgba(18,15,38,.06);
+    box-sizing: border-box;
   }
 
   .mptb-btn {
@@ -151,14 +169,14 @@
   }
   .mptb-btn svg { flex-shrink: 0; }
 
-  /* Main layout */
+  /* Main layout — fills exactly the space between tab-bar and footer */
   .app-layout {
     display: block;
     flex-direction: unset;
     padding: 0;
     gap: 0;
-    height: calc(100vh - 54px - env(safe-area-inset-top) - 58px - env(safe-area-inset-bottom));
-    height: calc(100dvh - 54px - env(safe-area-inset-top) - 58px - env(safe-area-inset-bottom));
+    height: calc(100vh - var(--chrome-h));
+    height: calc(100dvh - var(--chrome-h));
     overflow: hidden;
   }
 
@@ -296,41 +314,60 @@
   h2 { font-size: 20px; }
   .section-kicker { font-size: 9.5px; }
 
-  /* Single-column grid — but keep date fields from overflowing */
+  /* Single-column grid */
   .grid.two {
     grid-template-columns: 1fr;
   }
 
-  /* Date input: constrain width and font so it fits on narrow screens */
+  /* Date input: force it to stay within its container on iOS */
   input[type="date"] {
     font-size: 14px;
-    min-width: 0;
     width: 100%;
+    min-width: 0;
+    max-width: 100%;
     box-sizing: border-box;
+    /* iOS renders a native spinner — clip it to the label's width */
+    display: block;
   }
 
-  /* Mobile input sizing — 16px prevents iOS zoom on most inputs */
+  /* Prevent the label itself from overflowing */
+  label {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  /* Mobile input sizing — 16px prevents iOS zoom */
   input:not([type="date"]), textarea { font-size: 16px; }
 
-  /* Footer — no extra bottom padding, relies on safe-area env() for notched phones */
+  /* Footer — flush to the bottom, uses safe-area for notched phones */
   .tab-footer {
-    flex: 0 0 auto; width: 100%;
-    border-radius: 0; border: 0; border-top: 1px solid var(--line);
-    padding: 10px 14px calc(14px + env(safe-area-inset-bottom)); background: #fff;
+    flex: 0 0 auto;
+    width: 100%;
+    border-radius: 0;
+    border: 0;
+    border-top: 1px solid var(--line);
+    padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+    background: #fff;
     box-shadow: 0 -2px 10px rgba(18,15,38,.06);
-    display: flex; justify-content: space-between; gap: 10px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    box-sizing: border-box;
+    /* Ensure total height matches --footer-h (58px + safe-area) */
+    min-height: var(--footer-h);
   }
   .tab-footer .primary-btn, .tab-footer .ghost-btn {
     flex: 1; padding: 12px 14px; font-size: 13.5px;
   }
 
-  /* Preview panel — no excess bottom space */
+  /* Preview panel */
   .preview-panel {
     flex: unset;
     position: static;
     width: 100%; max-width: 100%; min-width: 0;
-    height: calc(100vh - 54px - env(safe-area-inset-top) - 58px - env(safe-area-inset-bottom));
-    height: calc(100dvh - 54px - env(safe-area-inset-top) - 58px - env(safe-area-inset-bottom));
+    height: calc(100vh - var(--chrome-h));
+    height: calc(100dvh - var(--chrome-h));
     border-left: none;
     border-top: none;
     border-radius: 0;
@@ -343,7 +380,6 @@
   .preview-scroll {
     flex: 1;
     border-radius: var(--r-lg) var(--r-lg) 0 0;
-    /* Remove any implicit bottom gap */
     margin-bottom: 0;
   }
 
@@ -387,16 +423,38 @@
    4. SMALL MOBILE ≤ 480px
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 480px) {
-  .app-header { padding: 0 12px; height: 50px; padding-top: env(safe-area-inset-top); height: calc(50px + env(safe-area-inset-top)); }
+  :root {
+    --header-h: calc(50px + env(safe-area-inset-top));
+    --mtb-h: 56px;
+    --footer-h: calc(56px + env(safe-area-inset-bottom));
+    --chrome-h: calc(var(--header-h) + var(--mtb-h) + var(--footer-h));
+  }
+
+  .app-header { padding: 0 12px; padding-top: env(safe-area-inset-top); height: var(--header-h); }
   .brand-logo-frame { width: 30px; height: 30px; }
   h1 { font-size: 14px; }
   .eyebrow { display: none; }
-  .mobile-primary-tab-bar { top: calc(50px + env(safe-area-inset-top)); padding: 7px 12px; gap: 6px; }
+  .mobile-primary-tab-bar {
+    top: var(--header-h);
+    padding: 7px 12px;
+    gap: 6px;
+    height: var(--mtb-h);
+  }
   .mptb-btn { font-size: 12.5px; padding: 9px 10px; gap: 5px; }
-  .app-layout { height: calc(100vh - 50px - env(safe-area-inset-top) - 56px - env(safe-area-inset-bottom)); height: calc(100dvh - 50px - env(safe-area-inset-top) - 56px - env(safe-area-inset-bottom)); }
-  .preview-panel { height: calc(100vh - 50px - env(safe-area-inset-top) - 56px - env(safe-area-inset-bottom)); height: calc(100dvh - 50px - env(safe-area-inset-top) - 56px - env(safe-area-inset-bottom)); padding: 8px 10px 0; }
+  .app-layout {
+    height: calc(100vh - var(--chrome-h));
+    height: calc(100dvh - var(--chrome-h));
+  }
+  .preview-panel {
+    height: calc(100vh - var(--chrome-h));
+    height: calc(100dvh - var(--chrome-h));
+    padding: 8px 10px 0;
+  }
   .tab-panel { padding: 14px 12px 0; }
-  .tab-footer { padding: 9px 12px calc(12px + env(safe-area-inset-bottom)); }
+  .tab-footer {
+    padding: 9px 12px calc(9px + env(safe-area-inset-bottom));
+    min-height: var(--footer-h);
+  }
   h2 { font-size: 18px; }
   label { font-size: 11px; margin-bottom: 10px; }
   input:not([type="date"]), textarea { font-size: 16px; padding: 10px 12px; }
@@ -420,51 +478,37 @@
    6. LANDSCAPE MOBILE
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 767px) and (orientation: landscape) {
-  .app-header { height: 46px; padding-top: env(safe-area-inset-top); height: calc(46px + env(safe-area-inset-top)); }
+  :root {
+    --header-h: calc(46px + env(safe-area-inset-top));
+    --mtb-h: 50px;
+    --footer-h: calc(50px + env(safe-area-inset-bottom));
+    --chrome-h: calc(var(--header-h) + var(--mtb-h) + var(--footer-h));
+  }
+
+  .app-header { height: var(--header-h); padding-top: env(safe-area-inset-top); }
   .brand-logo-frame { width: 28px; height: 28px; }
   h1 { font-size: 13px; }
   .eyebrow { display: none; }
-  .mobile-primary-tab-bar { top: calc(46px + env(safe-area-inset-top)); padding: 5px 12px; gap: 7px; }
+  .mobile-primary-tab-bar {
+    top: var(--header-h);
+    padding: 5px 12px;
+    gap: 7px;
+    height: var(--mtb-h);
+  }
   .mptb-btn { font-size: 12px; padding: 7px 10px; }
-  .app-layout { height: calc(100vh - 46px - env(safe-area-inset-top) - 50px - env(safe-area-inset-bottom)); height: calc(100dvh - 46px - env(safe-area-inset-top) - 50px - env(safe-area-inset-bottom)); }
-  .preview-panel { height: calc(100vh - 46px - env(safe-area-inset-top) - 50px - env(safe-area-inset-bottom)); height: calc(100dvh - 46px - env(safe-area-inset-top) - 50px - env(safe-area-inset-bottom)); }
+  .app-layout {
+    height: calc(100vh - var(--chrome-h));
+    height: calc(100dvh - var(--chrome-h));
+  }
+  .preview-panel {
+    height: calc(100vh - var(--chrome-h));
+    height: calc(100dvh - var(--chrome-h));
+  }
   .tab-panel { padding: 12px 16px 0; }
-  .tab-footer { padding: 7px 16px calc(9px + env(safe-area-inset-bottom)); }
+  .tab-footer {
+    padding: 7px 16px calc(7px + env(safe-area-inset-bottom));
+    min-height: var(--footer-h);
+  }
   h2 { font-size: 17px; }
   .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-/* ══════════════════════════════════════════════════════════════
-   7. PWA STANDALONE — fill remaining bottom space
-   In standalone mode the browser chrome is absent, so
-   safe-area-inset-bottom is sufficient and we no longer need to
-   subtract a bottom chrome offset. Removing that extra deduction
-   lets the layout stretch to fill the gap visible in the
-   screenshot below the tab footer.
-   ══════════════════════════════════════════════════════════════ */
-@media (max-width: 767px) and (display-mode: standalone) {
-  .app-layout {
-    height: calc(100dvh - 54px - env(safe-area-inset-top) - 58px);
-  }
-  .preview-panel {
-    height: calc(100dvh - 54px - env(safe-area-inset-top) - 58px);
-  }
-}
-
-@media (max-width: 480px) and (display-mode: standalone) {
-  .app-layout {
-    height: calc(100dvh - 50px - env(safe-area-inset-top) - 56px);
-  }
-  .preview-panel {
-    height: calc(100dvh - 50px - env(safe-area-inset-top) - 56px);
-  }
-}
-
-@media (max-width: 767px) and (orientation: landscape) and (display-mode: standalone) {
-  .app-layout {
-    height: calc(100dvh - 46px - env(safe-area-inset-top) - 50px);
-  }
-  .preview-panel {
-    height: calc(100dvh - 46px - env(safe-area-inset-top) - 50px);
-  }
 }
