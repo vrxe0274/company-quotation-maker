@@ -161,6 +161,7 @@ h1 {
   letter-spacing: -.03em;
   color: #14131A;
   margin: 0;
+  white-space: nowrap;
 }
 
 /* ── Main Layout ─────────────────────────────────────────────── */
