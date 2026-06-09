@@ -242,18 +242,29 @@
   .nav-dd-item.is-active .nav-dd-check { opacity: 1; }
   .nav-dd-sep { height: 1px; margin: 6px 8px; background: var(--line); }
 
-  /* Tab panels: grow to fill space between nav-dropdown and footer */
-  .tab-panels {
-    flex: none;              /* stop growing to fill space */
-    overflow: visible;       /* let content determine height */
-    padding: 0;
-    padding-bottom: calc(60px + env(safe-area-inset-bottom)); /* enough to clear the footer */
-  }
-  .tab-panel {
-    background: #fff; border: 0; border-radius: 0;
-    padding: 20px 20px 24px; box-shadow: none; min-height: 100%;
-    min-height: unset;       /* remove the 100% min-height */
-  }
+ /* In the @media (max-width: 767px) block — replace the existing .tab-panels rule */
+
+.tab-panels {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  background: var(--bg);
+  scrollbar-width: thin;
+  /* Remove min-height: 100% from children pulling it open */
+}
+
+.tab-panel {
+  background: #fff;
+  border: 0;
+  border-radius: 0;
+  padding: 16px 16px 0;
+  box-shadow: none;
+  min-height: unset; /* <-- was 100%, which was causing the gap */
+}
 
   #tab-services.is-active {
     max-height: none; display: flex; flex-direction: column; min-height: 100%; padding-bottom: 0;
