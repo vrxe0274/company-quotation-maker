@@ -96,6 +96,9 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    /* PWA safe area — fills the gap at the bottom in standalone mode */
+    padding-bottom: env(safe-area-inset-bottom);
+    box-sizing: border-box;
   }
 
   /* Header: fixed height, never grows */
@@ -262,27 +265,44 @@
   h2 { font-size: 20px; }
   .section-kicker { font-size: 9.5px; }
 
+  /* Single-column grid on mobile */
   .grid.two { grid-template-columns: 1fr; }
 
-  /* Date input: prevent iOS native picker from overflowing */
-  input[type="date"] {
-    font-size: 14px;
+  /* ── Date & time inputs: prevent overflow on mobile ── */
+  input[type="date"],
+  input[type="time"],
+  input[type="text"] {
     width: 100%;
     min-width: 0;
     max-width: 100%;
     box-sizing: border-box;
     display: block;
   }
-  label { min-width: 0; max-width: 100%; overflow: hidden; }
-  input:not([type="date"]), textarea { font-size: 16px; }
+  input[type="date"] {
+    font-size: 14px;
+    /* prevent iOS native date picker from spilling outside the label */
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  label {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    /* ensure the label itself is also a proper block so inputs fill it */
+    display: grid;
+  }
+  input:not([type="date"]):not([type="time"]), textarea { font-size: 16px; }
 
-  /* Footer: flex child, sits flush at bottom, no calc needed */
+  /* Footer: flex child, sits flush at bottom, no calc needed.
+     NOTE: padding-bottom is intentionally zero here because body
+     already carries env(safe-area-inset-bottom) via padding-bottom.
+     This avoids double-counting the safe area. */
   .tab-footer {
     flex: 0 0 auto;
     width: 100%;
     border-radius: 0; border: 0;
     border-top: 1px solid var(--line);
-    padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+    padding: 10px 14px;
     background: #fff;
     box-shadow: 0 -2px 10px rgba(18,15,38,.06);
     display: flex;
@@ -350,11 +370,12 @@
   .mobile-primary-tab-bar { padding: 7px 12px; gap: 6px; }
   .mptb-btn { font-size: 12.5px; padding: 9px 10px; gap: 5px; }
   .tab-panel { padding: 14px 12px 0; }
-  .tab-footer { padding: 9px 12px calc(9px + env(safe-area-inset-bottom)); }
+  .tab-footer { padding: 9px 12px; }
   h2 { font-size: 18px; }
   label { font-size: 11px; margin-bottom: 10px; }
-  input:not([type="date"]), textarea { font-size: 16px; padding: 10px 12px; }
-  input[type="date"] { font-size: 14px; padding: 10px 12px; }
+  input:not([type="date"]):not([type="time"]), textarea { font-size: 16px; padding: 10px 12px; }
+  input[type="date"],
+  input[type="time"] { font-size: 14px; padding: 10px 12px; }
   .nav-dropdown { padding: 8px 12px; }
   .nav-dd-trigger { padding: 9px 12px; gap: 10px; }
   .nav-dd-label { font-size: 13.5px; }
@@ -381,7 +402,7 @@
   .mobile-primary-tab-bar { padding: 5px 12px; gap: 7px; }
   .mptb-btn { font-size: 12px; padding: 7px 10px; }
   .tab-panel { padding: 12px 16px 0; }
-  .tab-footer { padding: 7px 16px calc(9px + env(safe-area-inset-bottom)); }
+  .tab-footer { padding: 7px 16px; }
   h2 { font-size: 17px; }
   .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
