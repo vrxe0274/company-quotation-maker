@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   try {
     await App.loadHtmlIncludes();
     App.init();
+    document.dispatchEvent(new CustomEvent("vrxe:ready"));
   } catch (error) {
     console.error(error);
     document.body.insertAdjacentHTML(

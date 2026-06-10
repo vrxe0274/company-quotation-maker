@@ -1,4 +1,4 @@
-App.adminPassword   = "vrxeadmin";
+const ADMIN_PASSWORD = "vrxeadmin";
 App.currentAdminTab = "payment";
 
 App.openAdminModal = () => {
@@ -54,7 +54,7 @@ App.unlockAdminModal = () => {
   const passwordError = App.$("adminPasswordError");
   const password      = passwordInput?.value || "";
 
-  if (password !== App.adminPassword) {
+  if (password !== ADMIN_PASSWORD) {
     if (passwordError) passwordError.textContent = "Incorrect password. Please try again.";
     passwordInput?.focus();
     passwordInput?.select();

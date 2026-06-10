@@ -212,20 +212,8 @@
     apply();
   }
 
-  /* The HTML partials load asynchronously, so poll briefly until
-     the tabs + form-content exist, then initialise. */
-  function waitAndStart(tries = 0) {
-    if (document.querySelector(".tabs") && document.querySelector(".form-content")) {
-      start();
-      return;
-    }
-    if (tries > 80) return;
-    setTimeout(() => waitAndStart(tries + 1), 120);
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => waitAndStart());
-  } else {
-    waitAndStart();
-  }
+  /* HTML partials load asynchronously. htmlIncludes.js dispatches
+     "vrxe:ready" after App.init() completes, guaranteeing tabs +
+     form-content exist before we build the dropdown. */
+  document.addEventListener("vrxe:ready", () => start());
 })();

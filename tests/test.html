@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VRXE Tests</title>
+  <style>
+    body   { font-family: monospace; padding: 1.5rem; background: #f8f8ff; color: #111; }
+    h1     { margin-bottom: 0.25rem; }
+    .meta  { color: #666; margin-bottom: 1.5rem; font-size: 0.9rem; }
+    .suite { margin-top: 1.5rem; font-size: 1rem; font-weight: bold; color: #444; border-bottom: 1px solid #ddd; padding-bottom: 0.25rem; }
+    .pass  { color: #16a34a; }
+    .fail  { color: #dc2626; font-weight: bold; }
+    .row   { padding: 0.1rem 0; }
+    #summary { margin-top: 1.5rem; font-size: 1.1rem; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>VRXE Unit Tests</h1>
+  <p class="meta">Open in browser via Live Server (file:// blocks relative JS imports)</p>
+  <div id="output"></div>
+  <div id="summary"></div>
+
+  <script>
+    window.App = window.App || {};
+    App.$ = (id) => document.getElementById(id);
+    App.tabOrder = ["quote", "client", "event", "services"];
+    App.state    = { activeTab: "quote", previewScale: 1, isFitMode: true };
+    App.fields   = [];
+  </script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/tabs.js"></script>
+
+  <script>
+    // ── Minimal test runner ───────────────────────────────────
+    const results = [];
+    let   suite   = "";
+
+    function describe(name) { suite = name; }
+
+    function test(name, fn) {
+      try {
+        fn();
+        results.push({ suite, name, pass: true });
+      } catch (e) {
+        results.push({ suite, name, pass: false, error: e.message });
+      }
+    }
+
+    function assert(cond, msg) {
+      if (!cond) throw new Error(msg || "Assertion failed");
+    }
+
+    function assertEqual(a, b) {
+      if (a !== b) throw new Error(`Expected ${JSON.stringify(b)}, got ${JSON.stringify(a)}`);
+    }
+
+    // ── App.esc ───────────────────────────────────────────────
+    describe("App.esc");
+    test("& → &amp;",                 () => assertEqual(App.esc("&"),  "&amp;"));
+    test("< → &lt;",                  () => assertEqual(App.esc("<"),  "&lt;"));
+    test("> → &gt;",                  () => assertEqual(App.esc(">"),  "&gt;"));
+    test("' → &#39;",                 () => assertEqual(App.esc("'"),  "&#39;"));
+    test('" → &quot;',                () => assertEqual(App.esc('"'),  "&quot;"));
+    test("plain text unchanged",      () => assertEqual(App.esc("hello"), "hello"));
+    test("empty string → ''",         () => assertEqual(App.esc(""), ""));
+    test("undefined → ''",            () => assertEqual(App.esc(), ""));
+    test("XSS payload fully escaped", () => {
+      const out = App.esc('<script>alert("xss")<\/script>');
+      assert(!out.includes("<script>"),    `raw <script> must be escaped — got: ${out}`);
+      assert(!out.includes("<\/script>"), `raw <\/script> must be escaped — got: ${out}`);
+    });
+    test("mixed special chars",       () => {
+      assertEqual(App.esc("a&b<c>d'e\"f"), "a&amp;b&lt;c&gt;d&#39;e&quot;f");
+    });
+
+    // ── App.clamp ─────────────────────────────────────────────
+    describe("App.clamp");
+    test("within range",   () => assertEqual(App.clamp(5,  1, 10), 5));
+    test("below min → min",() => assertEqual(App.clamp(0,  1, 10), 1));
+    test("above max → max",() => assertEqual(App.clamp(20, 1, 10), 10));
+    test("at min boundary",() => assertEqual(App.clamp(1,  1, 10), 1));
+    test("at max boundary",() => assertEqual(App.clamp(10, 1, 10), 10));
+
+    // ── App.numberToWords ─────────────────────────────────────
+    describe("App.numberToWords");
+    test("0",                  () => assertEqual(App.numberToWords(0),         "Zero Pesos Only"));
+    test("1",                  () => assertEqual(App.numberToWords(1),         "One Pesos Only"));
+    test("19",                 () => assertEqual(App.numberToWords(19),        "Nineteen Pesos Only"));
+    test("20",                 () => assertEqual(App.numberToWords(20),        "Twenty Pesos Only"));
+    test("100",                () => assertEqual(App.numberToWords(100),       "One Hundred Pesos Only"));
+    test("1 000",              () => assertEqual(App.numberToWords(1000),      "One Thousand Pesos Only"));
+    test("1 500",              () => assertEqual(App.numberToWords(1500),      "One Thousand Five Hundred Pesos Only"));
+    test("1 000 000",          () => assertEqual(App.numberToWords(1_000_000), "One Million Pesos Only"));
+    test("float rounds up",    () => assertEqual(App.numberToWords(1.9),       "Two Pesos Only"));
+    test("float rounds down",  () => assertEqual(App.numberToWords(1.4),       "One Pesos Only"));
+    test("NaN → zero",         () => assertEqual(App.numberToWords(NaN),       "Zero Pesos Only"));
+
+    // ── App.formatDateShort ───────────────────────────────────
+    describe("App.formatDateShort");
+    test("empty string → —",     () => assertEqual(App.formatDateShort(""), "—"));
+    test("null → —",             () => assertEqual(App.formatDateShort(null), "—"));
+    test("undefined → —",        () => assertEqual(App.formatDateShort(undefined), "—"));
+    test("YYYY-MM-DD includes day", () => {
+      const out = App.formatDateShort("2025-06-10");
+      assert(out.includes("10"),                  `day missing — got: ${out}`);
+      assert(out.includes("06") || out.includes("6"), `month missing — got: ${out}`);
+      assert(out.includes("2025"),                `year missing — got: ${out}`);
+    });
+    test("uses dot separator", () => {
+      const out = App.formatDateShort("2025-06-10");
+      assert(out.includes("."), `expected dot separator — got: ${out}`);
+    });
+
+    // ── App.generateQuoteCode ─────────────────────────────────
+    describe("App.generateQuoteCode");
+    test("format QUO-YYYY-MM-NNNN", () => {
+      const code = App.generateQuoteCode();
+      assert(/^QUO-\d{4}-\d{2}-\d{4}$/.test(code), `bad format: ${code}`);
+    });
+    test("year and month match today", () => {
+      const now   = new Date();
+      const year  = String(now.getFullYear());
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const code  = App.generateQuoteCode();
+      assert(code.startsWith(`QUO-${year}-${month}-`), `expected prefix QUO-${year}-${month}- — got: ${code}`);
+    });
+    test("sequence increments monotonically", () => {
+      const now   = new Date();
+      const key   = `vrxe_quote_seq_${now.getFullYear()}_${String(now.getMonth() + 1).padStart(2, "0")}`;
+      localStorage.removeItem(key);
+      const n1 = parseInt(App.generateQuoteCode().split("-")[3], 10);
+      const n2 = parseInt(App.generateQuoteCode().split("-")[3], 10);
+      const n3 = parseInt(App.generateQuoteCode().split("-")[3], 10);
+      assertEqual(n2, n1 + 1);
+      assertEqual(n3, n1 + 2);
+      localStorage.removeItem(key);
+    });
+    test("sequence zero-padded to 4 digits", () => {
+      const now   = new Date();
+      const key   = `vrxe_quote_seq_${now.getFullYear()}_${String(now.getMonth() + 1).padStart(2, "0")}`;
+      localStorage.setItem(key, "0");
+      const code  = App.generateQuoteCode();
+      const seq   = code.split("-")[3];
+      assertEqual(seq.length, 4);
+      localStorage.removeItem(key);
+    });
+
+    // ── App.isSectionComplete ─────────────────────────────────
+    describe("App.isSectionComplete");
+
+    // Create hidden DOM fields for the quote tab
+    ["quoteCode", "quoteDate", "serviceAvailed", "servicePeriod", "preparedBy"].forEach(id => {
+      if (!document.getElementById(id)) {
+        const el = document.createElement("input");
+        el.id    = id;
+        el.value = "test-value";
+        el.style.display = "none";
+        document.body.appendChild(el);
+      }
+    });
+
+    test("unknown tab → false", () => assert(!App.isSectionComplete("nonexistent")));
+
+    test("quote tab: all fields filled → true", () => {
+      assert(App.isSectionComplete("quote"));
+    });
+    test("quote tab: empty required field → false", () => {
+      const el   = document.getElementById("quoteCode");
+      const prev = el.value;
+      el.value   = "";
+      assert(!App.isSectionComplete("quote"));
+      el.value   = prev;
+    });
+    test("quote tab: whitespace-only field → false", () => {
+      const el   = document.getElementById("serviceAvailed");
+      const prev = el.value;
+      el.value   = "   ";
+      assert(!App.isSectionComplete("quote"));
+      el.value   = prev;
+    });
+
+    test("services: no items → false", () => {
+      App.getItems = () => [];
+      assert(!App.isServiceSectionComplete());
+    });
+    test("services: checkbox unchecked → false", () => {
+      let cb = document.getElementById("servicesVerified");
+      if (!cb) {
+        cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.id   = "servicesVerified";
+        cb.style.display = "none";
+        document.body.appendChild(cb);
+      }
+      cb.checked  = false;
+      App.getItems = () => [{ service: "VR Booth", originalPrice: 5000, finalPrice: 5000 }];
+      assert(!App.isServiceSectionComplete());
+    });
+    test("services: checkbox checked + valid item → true", () => {
+      const cb    = document.getElementById("servicesVerified");
+      cb.checked  = true;
+      App.getItems = () => [{ service: "VR Booth", originalPrice: 5000, finalPrice: 5000 }];
+      App.shouldRenderItem = () => true;
+      assert(App.isServiceSectionComplete());
+      cb.checked  = false;
+    });
+    test("services: item with name but no price and no included → false", () => {
+      const cb   = document.getElementById("servicesVerified");
+      cb.checked = true;
+      App.getItems = () => [{ service: "VR Booth", originalPrice: 0, finalPrice: 0, included: false }];
+      assert(!App.isServiceSectionComplete());
+      cb.checked = false;
+    });
+    test("services: inclusion item (no price, included flag) → true", () => {
+      const cb   = document.getElementById("servicesVerified");
+      cb.checked = true;
+      App.getItems = () => [{ service: "Labor", originalPrice: 0, finalPrice: 0, included: true }];
+      App.shouldRenderItem = () => true;
+      assert(App.isServiceSectionComplete());
+      cb.checked = false;
+    });
+
+    // ── Render ────────────────────────────────────────────────
+    const out     = document.getElementById("output");
+    const summary = document.getElementById("summary");
+    const pass    = results.filter(r => r.pass).length;
+    const fail    = results.filter(r => !r.pass).length;
+
+    const bySuite = results.reduce((acc, r) => {
+      (acc[r.suite] = acc[r.suite] || []).push(r);
+      return acc;
+    }, {});
+
+    out.innerHTML = Object.entries(bySuite).map(([s, rows]) =>
+      `<div class="suite">${s}</div>` +
+      rows.map(r =>
+        `<div class="row ${r.pass ? "pass" : "fail"}">${r.pass ? "✓" : "✗"} ${r.name}${r.error ? ` — ${r.error}` : ""}</div>`
+      ).join("")
+    ).join("");
+
+    summary.innerHTML = `<span class="${fail ? "fail" : "pass"}">${pass} passed, ${fail} failed</span>`;
+  </script>
+</body>
+</html>
